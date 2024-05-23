@@ -6,17 +6,15 @@ const prisma = new PrismaClient()
 const selectAllAlunos = async function() {
 
     try {
-        
-        let sql = `select * from tbl_aluno`
 
-        let rsAlunos = await prisma.$queryRawUnsafe(sql)
+        let sql = "select * from tbl_aluno"
 
-        return rsAlunos
+        let rsAluno = await prisma.$queryRawUnsafe(sql)
 
-    } catch (error) {
-        
+        return rsAluno
+
+      } catch (error) {
         return false
-
     }
 }
 
@@ -41,17 +39,16 @@ const selectById = async function (id) {
 const selectByNameAluno = async function (nome) {
 
     try {
-
-        let sql = `select * from tbl_aluno where nome like "%${nome}%"`
-        console.log(sql);
         
+        let sql = `select * from tbl_aluno where nome like "%${nome}%"`
+         console.log(sql)
+
         let rsAluno = await prisma.$queryRawUnsafe(sql)
+
         return rsAluno
 
-        
     } catch (error) {
         return false
-        
     }
 
 }

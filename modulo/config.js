@@ -1,8 +1,36 @@
-const ERROR_INVALID_LOGIN= {status: false, status_code: 400, message: "O LOGIN ENCAMINHADO NA REQUISIÇÃO NÃO É VALIDO."}
-const ERROR_INVALID_CREDENTIALS= {status: false, status_code: 400, message: "Credenciais inválidas. Tente novamente."}
+ const ERROR_INVALID_LOGIN= {status: false, status_code: 400, message: "O LOGIN ENCAMINHADO NA REQUISIÇÃO NÃO É VALIDO."}
+ const ERROR_INVALID_CREDENTIALS= {status: false, status_code: 400, message: "Credenciais inválidas. Tente novamente."}
+ const ERROR_INVALID_ID = {status: false, status_code: 400, message: "O ID ENCAMINHADO NA REQUISIÇÃO NÃO É VALIDO."}
+ const ERROR_NOT_FOUND = {status: false, status_code: 404, message: "NENHUM ITEM ENCONTRADO NA REQUISIÇÃO."}
+ const ERROR_INTERNAL_SERVER_DB = {status: false, status_code: 500, message: "OCORRERAM NO PROCESAMENTO DO BANCO DE DADOS - CONTATE O ADMINISTRADOR DA API."}
+ const ERROR_NAME_NOT_FOUND = {status: false, status_code: 400, message: "NENHUM NOME FOI ENCONTRADO NA REQUISIÇÃO."}
+ const ERROR_REQUIRED_FIELDS = {status: false, status_code:400, message: "EXISTE CAMPOS OBRIGATÓRIOS QUE NAO FORAM PREENCHIDOS, OU UTRAPASSARAM O LIMITE DE CARACTERES"}
+ const ERROR_CONTENT_TYPE = {status: false, status_code:415, message: "O CONTENT-TYPE DA REQUISIÇÃO NÃO É SUPORTADO PELA API. DEVE-SE ENVIAR DADOS NO FORMATO APPLICATION/JSON"}
+ const ERROR_INTERNAL_SERVER = {status: false, status_code:500, message: "OORRERA ERROS NO SERVIDOR BACK-END NA CAMADA DE SERVIÇOS/NEGÓCIOS, PORTANTO NÃO FOI POSSÍVEL PROCESSAR A REQUISIÇÃO. - CONTATE O ADMINISTRADOR DA API"}
 
 
-module.exports = {
+//message de sucesso.
+
+   const SUCESSED_CREATED_ITEM = {status: true, status_code: 201, message: "O ITEM FOI CRIADO COM SUCESSO NO BANCO DE DADOS"}
+   const SUCCESSED_DELETED_ITEM = {status: true, status_code: 200, message: "O ITEM FOI APAGADO COM SUCESSO NO BANCO DE DADOS"}
+   const SUCCESSED_UPDATED_ITEM = {status: true, status_code: 200, message: "O ITEM FOI ATUALIZADO COM SUCESSO NO BANCO DE DADOS"}
+
+   
+
+
+ module.exports = {
+    ERROR_INVALID_ID,
+    ERROR_NOT_FOUND,
+    ERROR_INTERNAL_SERVER_DB,
+    ERROR_NAME_NOT_FOUND,
+    ERROR_REQUIRED_FIELDS,
+    SUCESSED_CREATED_ITEM,
+    ERROR_CONTENT_TYPE,
+    ERROR_INTERNAL_SERVER,
+    SUCCESSED_DELETED_ITEM,
+    SUCCESSED_UPDATED_ITEM,
     ERROR_INVALID_LOGIN,
     ERROR_INVALID_CREDENTIALS
-}
+     
+ }
+
