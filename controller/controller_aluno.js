@@ -1,7 +1,6 @@
 const message = require('../modulo/config.js')
 const alunosDao = require('../module/DAO/aluno.js')
 const { json } = require('body-parser')
-const aluno = require('../module/DAO/aluno.js')
 
 const setInserirNovoAluno = async function (dadosAluno, contentType) {
     try {
@@ -14,10 +13,10 @@ const setInserirNovoAluno = async function (dadosAluno, contentType) {
 
             console.log(dadosAluno)
 
-            if (dadosAtor.nome == '' || dadosAtor.nome == undefined || dadosAtor.nome == null || dadosAtor.nome.length > 100 ||
-                dadosAtor.data_nascimento == '' || dadosAtor.data_nascimento == undefined || dadosAtor.data_nascimento == null || dadosAtor.data_nascimento.length > 12 ||
-                dadosAtor.numero_matricula == '' || dadosAtor.numero_matricula == undefined || dadosAtor.numero_matricula == null || isNaN(dadosAluno.numero_matricula) ||
-                dadosAtor.cep == '' || dadosAtor.cep == undefined || dadosAtor.cep == null || isNaN(dadosAluno.cep)
+            if (dadosAluno.nome == '' || dadosAluno.nome == undefined || dadosAluno.nome == null || dadosAluno.nome.length > 100 ||
+                dadosAluno.data_nascimento == '' || dadosAluno.data_nascimento == undefined || dadosAluno.data_nascimento == null || dadosAluno.data_nascimento.length > 12 ||
+                dadosAluno.numero_matricula == '' || dadosAluno.numero_matricula == undefined || dadosAluno.numero_matricula == null || isNaN(dadosAluno.numero_matricula) ||
+                dadosAluno.cep == '' || dadosAluno.cep == undefined || dadosAluno.cep == null || isNaN(dadosAluno.cep)
             ) {
                 return message.ERROR_REQUIRED_FIELDS
 
@@ -27,7 +26,7 @@ const setInserirNovoAluno = async function (dadosAluno, contentType) {
 
             if (statusValidated === true) {
                 //ecaminha os dados para o dao
-                let novoAlunoJson = await alunosDao.insertNovoAluno(dadosAtor)
+                let novoAlunoJson = await alunosDao.insertNovoAluno(dadosAluno)
                 let id = await alunosDao.selectById()
 
                 alunoJson.status = message.SUCESSED_CREATED_ITEM.status
@@ -49,7 +48,6 @@ const setInserirNovoAluno = async function (dadosAluno, contentType) {
 
 
 }
-
 
 const setAtualizarAluno = async function (id, dadosAluno, contentType) {
     try {
@@ -58,10 +56,10 @@ const setAtualizarAluno = async function (id, dadosAluno, contentType) {
             let statusValidated = false
             let atorJson = {}
 
-            if (dadosAtor.nome == '' || dadosAtor.nome == undefined || dadosAtor.nome == null || dadosAtor.nome.length > 100 ||
-                dadosAtor.data_nascimento == '' || dadosAtor.data_nascimento == undefined || dadosAtor.data_nascimento == null || dadosAtor.data_nascimento.length > 12 ||
-                dadosAtor.numero_matricula == '' || dadosAtor.numero_matricula == undefined || dadosAtor.numero_matricula == null || isNaN(dadosAluno.numero_matricula) ||
-                dadosAtor.cep == '' || dadosAtor.cep == undefined || dadosAtor.cep == null || isNaN(dadosAluno.cep)
+            if (dadosAluno.nome == '' || dadosAluno.nome == undefined || dadosAluno.nome == null || dadosAluno.nome.length > 100 ||
+                dadosAluno.data_nascimento == '' || dadosAluno.data_nascimento == undefined || dadosAluno.data_nascimento == null || dadosAluno.data_nascimento.length > 12 ||
+                dadosAluno.numero_matricula == '' || dadosAluno.numero_matricula == undefined || dadosAluno.numero_matricula == null || isNaN(dadosAluno.numero_matricula) ||
+                dadosAluno.cep == '' || dadosAluno.cep == undefined || dadosAluno.cep == null || isNaN(dadosAluno.cep)
             ) {
                 return message.ERROR_REQUIRED_FIELDS
             } else {
@@ -70,7 +68,7 @@ const setAtualizarAluno = async function (id, dadosAluno, contentType) {
             }
             if (statusValidated === true) {
                 //ecaminha os dados para o dao
-                let novoAlunoJson = await alunosDao.insertNovoAluno(dadosAtor)
+                let novoAlunoJson = await alunosDao.insertNovoAluno(dadosAluno)
                 let id = await alunosDao.selectById()
 
                 alunoJson.status = message.SUCESSED_CREATED_ITEM.status
@@ -92,7 +90,6 @@ const setAtualizarAluno = async function (id, dadosAluno, contentType) {
 
     }
 }
-
 
 const setExcluirAluno = async function (id) {
 
@@ -161,7 +158,7 @@ const getBuscarAluno = async function (id) {
 
             if (dadosAluno.length > 0) {
 
-                alunosJson.ator = dadosAluno
+                alunosJson.aluno = dadosAluno
                 alunosJson.status_code = 200
 
                 return alunosJson
@@ -197,7 +194,7 @@ const getNameAluno = async function (nome) {
             console.log(nomeAluno)
 
             if (nomeAluno.length > 0) {
-                alunoJson.filme = nomeAluno
+                alunoJson.aluno = nomeAluno
                 alunoJson.status_code = 200
 
                 return alunoJson

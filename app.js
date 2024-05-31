@@ -19,6 +19,10 @@ app.use((request, response, next ) => {
 const bodyParserJson = bodyParser.json()
 
 const controllerAlunos = require('./controller/controller_aluno.js')
+const controllerProfessor = require('./controller/controller_professor.js')
+
+
+/////////////////////////////////// ALUNO ///////////////////////////////////
 
 
 //todos alunos ok
@@ -48,6 +52,7 @@ app.get('/v1/Vulpes/Alunos/:id', cors(), async function(request, response, next)
 
 })
 
+//n sei 
 app.get('/v1/Vulpes/Alunos/nome', cors(), async function(request, response, next){
     //Recebe o id encaminhado pela requisição 
    let nome = request.query.nome
@@ -66,6 +71,54 @@ app.delete('/v1/Vulpes/Alunos/:id', cors(), async function(request, response){
     response.status(200)
     response.json(dadosAluno)
 })
+
+
+/////////////////////////////////// PROFESSOR ///////////////////////////////////
+
+app.get('/v1/Vulpes/Professor', cors(), async function(request, response, next){
+    let dadosProfessor = await controllerProfessor.getListarProfessor()
+    
+
+    if(dadosProfessor) {
+
+        response.json(dadosProfessor)
+        response.status(200)
+
+    } else {
+        response.json({message: 'Nenhum registro encontrado'})
+        response.status(200)
+    }
+})
+
+app.get('/v1/Vulpes/Professor/:id', cors(), async function(request, response, next){
+    //Recebe o id encaminhado pela requisição 
+   let idProfessor = request.params.id
+   let dadosProfessor = await controllerProfessor.getBuscarProfessor(idProfessor)
+
+   response.status(dadosProfessor.status_code)
+   response.json(dadosProfessor)
+
+})
+
+app.get('/v1/Vulpes/Professor/nome', cors(), async function(request, response, next){
+    //Recebe o id encaminhado pela requisição 
+   let nome = request.query.nome
+   let dadosProfessor = await controllerProfessor.getNameProfessor(nome)
+
+   response.status(dadosProfessor.status_code)
+   response.json(dadosProfessor)
+
+})
+
+app.delete('/v1/Vulpes/Professor/:id', cors(), async function(request, response){
+    let idProfessor = request.params.id
+    let dadosProfessor = await controllerProfessor.setExcluirProfessor(idProfessor)
+
+    response.status(200)
+    response.json(dadosProfessor)
+})
+
+
 
 
 app.listen(8080, function(){
