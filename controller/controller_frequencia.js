@@ -1,23 +1,23 @@
 const message = require('../modulo/config.js')
-const professorDAO = require('../module/DAO/professor.js')
+const frequenciaDAO = require('../module/DAO/frequencia.js')
 const { json } = require('body-parser')
-const aluno = require('../module/DAO/aluno.js')
 
-const setInserirNovoProfessor = async function (dadosProfessor, contentType) {
+
+const setInserirNovaFrequencia = async function (dadosFrequencia, contentType) {
     try {
 
         let statusValidated = false
-        let professorJson = {}
+        let frequenciaJson = {}
 
 
         if (String(contentType).toLowerCase() == 'application/json') {
 
-            console.log(dadosProfessor)
+            console.log(dadosFrequencia)
 
-            if (dadosProfessor.nome == '' || dadosProfessor.nome == undefined || dadosProfessor.nome == null || dadosProfessor.nome.length > 100 ||
-                dadosProfessor.email == '' || dadosProfessor.email == undefined || dadosProfessor.email == null || dadosProfessor.email.length > 12 ||
-                dadosProfessor.numero_matricula == '' || dadosProfessor.numero_matricula == undefined || dadosProfessor.numero_matricula == null || isNaN(dadosProfessor.numero_matricula) ||
-                dadosProfessor.telefone == '' || dadosProfessor.telefone == undefined || dadosProfessor.telefone == null || isNaN(dadosProfessor.telefone)
+            if (dadosFrequencia.dia_letivo  == '' || dadosFrequencia.dia_letivo  == undefined || dadosFrequencia.dia_letivo  == null || isNaN(dadosFrequencia.dia_letivo)||
+                dadosFrequencia.id_aluno  == '' || dadosFrequencia.id_aluno  == undefined || dadosFrequencia.id_aluno  == null || isNaN(dadosFrequencia.id_aluno )||
+                dadosFrequencia.id_disciplina  == '' || dadosFrequencia.id_disciplina  == undefined || dadosFrequencia.id_disciplina  == null || isNaN(dadosFrequencia.id_disciplina ) ||
+                dadosFrequencia.presenca  == '' || dadosFrequencia.presenca  == undefined || dadosFrequencia.presenca  == null || isNaN(dadosFrequencia.presenca )
             ) {
                 return message.ERROR_REQUIRED_FIELDS
 
@@ -27,16 +27,16 @@ const setInserirNovoProfessor = async function (dadosProfessor, contentType) {
 
             if (statusValidated === true) {
                 //ecaminha os dados para o dao
-                let novoprofessorJson = await professorDAO.insertNovoProfessor(dadosProfessor)
-                let id = await professorDAO.selectById()
+                let novofrequenciaJson = await frequenciaDAO.insertNovaFrequencia(dadosFrequencia)
+                let id = await frequenciaDAO.selectById()
 
-                professorJson.status = message.SUCESSED_CREATED_ITEM.status
-                professorJson.status_code = message.SUCESSED_CREATED_ITEM.status_code
-                professorJson.message = message.SUCESSED_CREATED_ITEM.message
-                professorJson.professor = dadosProfessor
-                professorJson.id = dadosProfessor.id
+                frequenciaJson.status = message.SUCESSED_CREATED_ITEM.status
+                frequenciaJson.status_code = message.SUCESSED_CREATED_ITEM.status_code
+                frequenciaJson.message = message.SUCESSED_CREATED_ITEM.message
+                frequenciaJson.frequencia = dadosFrequencia
+                frequenciaJson.id = dadosFrequencia.id
 
-                return professorJson
+                return frequenciaJson
             }
         } else {
 
@@ -50,17 +50,17 @@ const setInserirNovoProfessor = async function (dadosProfessor, contentType) {
 
 }
 
-const setAtualizarProfessor = async function (id, dadosProfessor, contentType) {
+const setAtualizarFrequencia = async function (id, dadosFrequencia, contentType) {
     try {
 
         if (String(contentType).toLowerCase() == 'application/json') {
             let statusValidated = false
-            let professorJson = {}
+            let frequenciaJson = {}
 
-            if (dadosProfessor.nome == '' || dadosProfessor.nome == undefined || dadosProfessor.nome == null || dadosProfessor.nome.length > 100 ||
-                dadosProfessor.email == '' || dadosProfessor.email == undefined || dadosProfessor.email == null || dadosProfessor.email.length > 12 ||
-                dadosProfessor.numero_matricula == '' || dadosProfessor.numero_matricula == undefined || dadosProfessor.numero_matricula == null || isNaN(dadosProfessor.numero_matricula) ||
-                dadosProfessor.telefone == '' || dadosProfessor.telefone == undefined || dadosProfessor.telefone == null || isNaN(dadosProfessor.telefone)
+            if (dadosFrequencia.dia_letivo  == '' || dadosFrequencia.dia_letivo  == undefined || dadosFrequencia.dia_letivo  == null || isNaN(dadosFrequencia.dia_letivo ) ||
+                dadosFrequencia.id_aluno  == '' || dadosFrequencia.id_aluno  == undefined || dadosFrequencia.id_aluno  == null || isNaN(dadosFrequencia.id_aluno ) ||
+                dadosFrequencia.id_disciplina  == '' || dadosFrequencia.id_disciplina  == undefined || dadosFrequencia.id_disciplina  == null || isNaN(dadosFrequencia.id_disciplina ) ||
+                dadosFrequencia.presenca == '' || dadosFrequencia.presenca  == undefined || dadosFrequencia.presenca  == null || isNaN(dadosFrequencia.presenca )
             ) {
                 return message.ERROR_REQUIRED_FIELDS
             } else {
@@ -69,16 +69,16 @@ const setAtualizarProfessor = async function (id, dadosProfessor, contentType) {
             }
             if (statusValidated === true) {
                 //ecaminha os dados para o dao
-                let novoprofessorJson = await professorDAO.insertNovoProfessor(dadosProfessor)
-                let id = await professorDAO.selectById()
+                let novofrequenciaJson = await frequenciaDAO.insertNovaFrequencia(dadosFrequencia)
+                let id = await frequenciaDAO.selectById()
 
-                professorJson.status = message.SUCESSED_CREATED_ITEM.status
-                professorJson.status_code = message.SUCESSED_CREATED_ITEM.status_code
-                professorJson.message = message.SUCESSED_CREATED_ITEM.message
-                professorJson.aluno = dadosProfessor
-                professorJson.id = dadosProfessor.id
+                frequenciaJson.status = message.SUCESSED_CREATED_ITEM.status
+                frequenciaJson.status_code = message.SUCESSED_CREATED_ITEM.status_code
+                frequenciaJson.message = message.SUCESSED_CREATED_ITEM.message
+                frequenciaJson.frequencia = dadosFrequencia
+                frequenciaJson.id = dadosFrequencia.id
 
-                return professorJson
+                return frequenciaJson
             }
         } else {
 
@@ -92,23 +92,23 @@ const setAtualizarProfessor = async function (id, dadosProfessor, contentType) {
     }
 }
 
-const setExcluirProfessor = async function (id) {
+const setExcluirFrequencia = async function (id) {
 
     try {
-        let idProfessor = id
+        let idFrequencia = id
 
         //Validação para verificar se o ID é válido (vazio, indefinido ou não numérico)
-        if (idProfessor == '' || idProfessor == undefined || isNaN(idProfessor) || idProfessor == null) {
+        if (idFrequencia == '' || idFrequencia == undefined || isNaN(idFrequencia) || idFrequencia == null) {
             return message.ERROR_INVALID_ID //400
         } else {
             
-            let professorId = await professorDAO.selectById(idProfessor)
+            let frequenciaID = await frequenciaDAO.selectById(idFrequencia)
 
-            if(professorId.length > 0) {
+            if(frequenciaID.length > 0) {
 
-                let alunosDeleted = await professorDAO.deleteProfessor(idProfessor)
+                let frequenciaDeleted = await frequenciaDAO.deleteFrequencia(idFrequencia)
                 
-                if(alunosDeleted){
+                if(frequenciaDeleted){
                     return message.SUCCESSED_DELETED_ITEM //200
                 }else{
                     return message.ERROR_INTERNAL_SERVER_DB //500
@@ -123,18 +123,18 @@ const setExcluirProfessor = async function (id) {
 
 }
 
-const getListarProfessor = async function () {
-    let professorJson = {}
+const getListarFrequencia = async function () {
+    let frequenciaJson = {}
 
-    let dadosProfessor = await professorDAO.selectAllProfessores()
+    let dadosFrequencia = await frequenciaDAO.selectAllFrequencia()
 
-    if (dadosProfessor) {
-        if (dadosProfessor.length > 0) {
-            professorJson.professor = dadosProfessor
-            professorJson.quantidade = dadosProfessor.length
-            professorJson.status_code = 200;
+    if (dadosFrequencia) {
+        if (dadosFrequencia.length > 0) {
+            frequenciaJson.frequencia = dadosFrequencia
+            frequenciaJson.quantidade = dadosFrequencia.length
+            frequenciaJson.status_code = 200;
 
-            return professorJson
+            return frequenciaJson
         } else {
             return message.ERROR_NOT_FOUND
         }
@@ -143,26 +143,26 @@ const getListarProfessor = async function () {
     }
 }
 
-const getBuscarProfessor = async function (id) {
+const getBuscarFrequencia = async function (id) {
     try {
 
-        let idProfessor = id
-        let professorJson = {}
+        let idFrequencia = id
+        let frequenciaJson = {}
 
-        if (idProfessor == '' || idProfessor == undefined || isNaN(idProfessor)) {
+        if (idFrequencia == '' || idFrequencia == undefined || isNaN(idFrequencia)) {
 
             return message.ERROR_INVALID_ID
 
         } else {
 
-            let dadosProfessor = await professorDAO.selectById(idProfessor)
+            let dadosFrequencia = await frequenciaDAO.selectById(idFrequencia)
 
-            if (dadosProfessor.length > 0) {
+            if (dadosFrequencia.length > 0) {
 
-                professorJson.professor = dadosProfessor
-                professorJson.status_code = 200
+                frequenciaJson.frequencia = dadosFrequencia
+                frequenciaJson.status_code = 200
 
-                return professorJson
+                return frequenciaJson
 
             } else {
                 return message.ERROR_NOT_FOUND
@@ -177,42 +177,42 @@ const getBuscarProfessor = async function (id) {
     }
 }
 
-const getNameProfessor = async function (nome) {
+// const getNameFrequencia = async function (nome ) {
 
-    let nameProfessor = nome
-    let professorJson = {}
+//     let nomeAlunoFreq = nome 
+//     let frequenciaJson = {}
 
 
-    if (nameProfessor == '' || nameProfessor == undefined) {
+//     if (nomeAlunoFreq == '' || nomeAlunoFreq == undefined) {
 
-        return message.ERROR_NAME_NOT_FOUND
+//         return message.ERROR_NAME_NOT_FOUND
 
-    } else {
-        let nomeProfessor = await professorDAO.selectByNameProfessor(nameProfessor)
+//     } else {
+//         let nomefreq = await frequenciaDAO.selectByNameProfessor(nomeAlunoFreq)
 
-        if (nomeProfessor) {
+//         if (nomefreq) {
 
-            console.log(nomeProfessor)
+//             console.log(nomefreq)
 
-            if (nomeProfessor.length > 0) {
-                professorJson.professor = nomeProfessor
-                professorJson.status_code = 200
+//             if (nomefreq.length > 0) {
+//                 frequenciaJson.aluno = alunoJson
+//                 frequenciaJson.frequencia = nomefreq
+//                 frequenciaJson.status_code = 200
 
-                return professorJson
-            } else {
-                return message.ERROR_NOT_FOUND
-            }
-        } else {
-            return message.ERROR_INTERNAL_SERVER_DB
-        }
-    }
-}
+//                 return frequenciaJson
+//             } else {
+//                 return message.ERROR_NOT_FOUND
+//             }
+//         } else {
+//             return message.ERROR_INTERNAL_SERVER_DB
+//         }
+//     }
+// }
 
 module.exports = {
-    setInserirNovoProfessor,
-    setAtualizarProfessor,
-    setExcluirProfessor,
-    getListarProfessor,
-    getBuscarProfessor,
-    getNameProfessor
+    setAtualizarFrequencia,
+    setInserirNovaFrequencia,
+    setExcluirFrequencia,
+    getListarFrequencia,
+    getBuscarFrequencia
 }

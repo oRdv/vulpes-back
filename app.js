@@ -20,6 +20,11 @@ const bodyParserJson = bodyParser.json()
 
 const controllerAlunos = require('./controller/controller_aluno.js')
 const controllerProfessor = require('./controller/controller_professor.js')
+const controllerFrequencia = require('./controller/controller_frequencia.js')
+const controllerDisciplina = require('./controller/controller_disciplina.js')
+const controllerGestao = require('./controller/controller_gestao.js')
+
+
 
 
 /////////////////////////////////// ALUNO ///////////////////////////////////
@@ -119,6 +124,143 @@ app.delete('/v1/Vulpes/Professor/:id', cors(), async function(request, response)
 })
 
 
+
+/////////////////////////////////// FREQUENCIA ///////////////////////////////////
+
+app.get('/v1/Vulpes/Frequencia', cors(), async function(request, response, next){
+    let dadosFrequencia = await controllerFrequencia.getListarFrequencia()
+    
+
+    if(dadosFrequencia) {
+
+        response.json(dadosFrequencia)
+        response.status(200)
+
+    } else {
+        response.json({message: 'Nenhum registro encontrado'})
+        response.status(200)
+    }
+})
+
+app.get('/v1/Vulpes/Frequencia/:id', cors(), async function(request, response, next){
+    //Recebe o id encaminhado pela requisição 
+   let idFrequencia = request.params.id
+   let dadosFrequencia = await controllerFrequencia.getBuscarFrequencia(idFrequencia)
+
+   response.status(dadosFrequencia.status_code)
+   response.json(dadosFrequencia)
+
+})
+
+// app.get('/v1/Vulpes/Professor/nome', cors(), async function(request, response, next){
+//     //Recebe o id encaminhado pela requisição 
+//    let nome = request.query.nome
+//    let dadosFrequencia = await controllerFrequencia.(nome)
+
+//    response.status(dadosFrequencia.status_code)
+//    response.json(dadosFrequencia)
+
+// })
+
+app.delete('/v1/Vulpes/Frequencia/:id', cors(), async function(request, response){
+    let idFrequencia = request.params.id
+    let dadosFrequencia = await controllerFrequencia.setExcluirFrequencia(idFrequencia)
+
+    response.status(200)
+    response.json(dadosFrequencia)
+})
+
+
+/////////////////////////////////// DISCIPLINA ///////////////////////////////////
+
+app.get('/v1/Vulpes/Disciplina', cors(), async function(request, response, next){
+    let dadosDisciplina = await controllerDisciplina.getListarDisciplina()
+    
+
+    if(dadosDisciplina) {
+
+        response.json(dadosDisciplina)
+        response.status(200)
+
+    } else {
+        response.json({message: 'Nenhum registro encontrado'})
+        response.status(200)
+    }
+})
+
+app.get('/v1/Vulpes/Disciplina/:id', cors(), async function(request, response, next){
+    //Recebe o id encaminhado pela requisição 
+   let idDisciplina = request.params.id
+   let dadosDisciplina = await controllerDisciplina.getBuscarDisciplina(idDisciplina)
+
+   response.status(dadosDisciplina.status_code)
+   response.json(dadosDisciplina)
+
+})
+
+// app.get('/v1/Vulpes/Professor/nome', cors(), async function(request, response, next){
+//     //Recebe o id encaminhado pela requisição 
+//    let nome = request.query.nome
+//    let dadosFrequencia = await controllerFrequencia.(nome)
+
+//    response.status(dadosFrequencia.status_code)
+//    response.json(dadosFrequencia)
+
+// })
+
+app.delete('/v1/Vulpes/Disciplina/:id', cors(), async function(request, response){
+    let idDisciplina = request.params.id
+    let dadosDisciplina = await controllerDisciplina.setExcluirDisciplina(idDisciplina)
+
+    response.status(200)
+    response.json(dadosFrequencia)
+})
+
+
+/////////////////////////////////// GESTAO ///////////////////////////////////
+
+app.get('/v1/Vulpes/Gestao', cors(), async function(request, response, next){
+    let dadosGestao = await controllerGestao.getListarGestao()
+    
+
+    if(dadosGestao) {
+
+        response.json(dadosGestao)
+        response.status(200)
+
+    } else {
+        response.json({message: 'Nenhum registro encontrado'})
+        response.status(200)
+    }
+})
+
+app.get('/v1/Vulpes/Gestao/:id', cors(), async function(request, response, next){
+    //Recebe o id encaminhado pela requisição 
+   let idGestao = request.params.id
+   let dadosGestao = await controllerGestao.getBuscarGestao(idGestao)
+
+   response.status(dadosGestao.status_code)
+   response.json(dadosGestao)
+
+})
+
+app.get('/v1/Vulpes/Gestao/nome', cors(), async function(request, response, next){
+    //Recebe o id encaminhado pela requisição 
+   let nome = request.query.nome
+   let dadosGestao = await controllerGestao.getNameGestao(nome)
+
+   response.status(dadosGestao.status_code)
+   response.json(dadosGestao)
+
+})
+
+app.delete('/v1/Vulpes/dadosGestao/:id', cors(), async function(request, response){
+    let idGestao = request.params.id
+    let dadosGestao = await controllerGestao.setExcluirGestao(idGestao)
+
+    response.status(200)
+    response.json(dadosGestao)
+})
 
 
 app.listen(8080, function(){

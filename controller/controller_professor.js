@@ -106,9 +106,9 @@ const setExcluirProfessor = async function (id) {
 
             if(professorId.length > 0) {
 
-                let alunosDeleted = await professorDAO.deleteProfessor(idProfessor)
+                let professorDeleted = await professorDAO.deleteProfessor(idProfessor)
                 
-                if(alunosDeleted){
+                if(professorDeleted){
                     return message.SUCCESSED_DELETED_ITEM //200
                 }else{
                     return message.ERROR_INTERNAL_SERVER_DB //500
