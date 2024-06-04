@@ -54,26 +54,24 @@ const selectByNameProfessor = async function (nome) {
 }
 
 const insertNovoProfessor = async function(dadosProfessor) {
+
     try {
-        
-        let sql
+        const sql = `INSERT INTO tbl_professor(nome, 
+                                            email , 
+                                            numero_matricula , 
+                                            telefone)
+                                            VALUES (
+                                                '${dadosAluno.nome}', 
+                                                '${dadosAluno.email }', 
+                                                '${dadosAluno.numero_matricula }', 
+                                                '${dadosAluno.telefone}')`
 
-        sql = `INSERT INTO tbl_professor (nome,
-                                     email,  
-                                     numero_matricula,
-                                     telefone)
-                                     VALUES (
-                                         '${dadosProfessor.nome}',
-                                         '${dadosProfessor.email}',
-                                         '${dadosProfessor.numero_matricula}',
-                                         '${dadosProfessor.telefone}'
-                                     )`
-
-        console.log(sql)
-
-        let result = await prisma.$queryRawUnsafe(sql)
+        const result = await prisma.$queryRawUnsafe(sql)
         if (result) {
-            return true
+
+            const insertedProf = await prisma.$queryRaw`SELECT * FROM tbl_professor WHERE id = (SELECT MAX(id) FROM tbl_professor)`
+            return insertedProf
+            
         } else {
             return false
         }

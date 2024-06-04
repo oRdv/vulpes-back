@@ -55,24 +55,21 @@ const selectByNameAluno = async function (nome) {
 
 const insertNovoAluno = async function(dadosAluno) {
     try {
-        
-        let sql
+        const sql = `INSERT INTO tbl_aluno(nome, 
+                                            numero_matricula, 
+                                            data_nascimento, 
+                                            cep)
+                                            VALUES (
+                                                '${dadosAluno.nome}', 
+                                                '${dadosAluno.numero_matricula}', 
+                                                '${dadosAluno.data_nascimento}', 
+                                                '${dadosAluno.cep}')`
 
-        sql = `INSERT INTO tbl_aluno (nome, 
-                                     numero_matricula,
-                                     data_nascimento,
-                                     cep)
-                                     VALUES (
-                                         '${dadosAluno.nome}',
-                                         '${dadosAluno.numero_matricula}',
-                                         '${dadosAluno.data_nascimento}',
-                                         '${dadosAluno.cep}'
-                                     )`
-
-        console.log(sql)
-        let result = await prisma.$queryRawUnsafe(sql)
+        const result = await prisma.$queryRawUnsafe(sql)
         if (result) {
-            return true
+
+            const insertedAluno = await prisma.$queryRaw`SELECT * FROM tbl_aluno WHERE id = (SELECT MAX(id) FROM tbl_aluno)`
+            return insertedAluno
         } else {
             return false
         }
@@ -82,33 +79,28 @@ const insertNovoAluno = async function(dadosAluno) {
 }
 
 
-const updateAluno = async function () {
+const updateAluno = async function (dadosAluno) {
     try {
-
-        let sql
-
+        let sql;
         sql = `UPDATE tbl_aluno SET 
-                                nome = '${dadosAluno.nome}',
-                                numero_matricula = '${dadosAluno.numero_matricula}',
-                                data_nascimento = '${dadosAluno.data_nascimento}',
-                                cep = '${dadosAluno.cep}'
-                                WHERE tbl_aluno.id = '${dadosAluno.id}`
+                    nome = '${dadosAluno.nome}', 
+                    numero_matricula = '${dadosAluno.numero_matricula}', 
+                    data_nascimento = '${dadosAluno.data_nascimento}', 
+                    cep = '${dadosAluno.cep}'
+                WHERE tbl_aluno.id = '${dadosAluno.id}'`;
+
+        let result = await prisma.$queryRawUnsafe(sql);
         
-
-        let result = await prisma.$queryRawUnsafe(sql)
-
-        if(result) {
-            return true
+        if (result) {
+            return true;
         } else {
-            return false
+            return false;
         }
-
     } catch (error) {
-        return false
+        return false;
     }
-
-
 }
+
 
 const deleteAluno = async function (id) {
 

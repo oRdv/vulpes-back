@@ -23,14 +23,14 @@ const controllerProfessor = require('./controller/controller_professor.js')
 const controllerFrequencia = require('./controller/controller_frequencia.js')
 const controllerDisciplina = require('./controller/controller_disciplina.js')
 const controllerGestao = require('./controller/controller_gestao.js')
-
-
+const controllerResponsavel = require('./controller/controller_responsavel.js')
+const controllerAviso = require('./controller/controller_aviso.js')
+const { isInt8Array } = require('util/types')
 
 
 /////////////////////////////////// ALUNO ///////////////////////////////////
 
 
-//todos alunos ok
 app.get('/v1/Vulpes/Alunos', cors(), async function(request, response, next){
     let dadosAlunos = await controllerAlunos.getListarAluno()
     
@@ -46,7 +46,7 @@ app.get('/v1/Vulpes/Alunos', cors(), async function(request, response, next){
     }
 })
 
-//id aluno ok
+
 app.get('/v1/Vulpes/Alunos/:id', cors(), async function(request, response, next){
     //Recebe o id encaminhado pela requisição 
    let idAluno = request.params.id
@@ -57,7 +57,7 @@ app.get('/v1/Vulpes/Alunos/:id', cors(), async function(request, response, next)
 
 })
 
-//n sei 
+
 app.get('/v1/Vulpes/Alunos/nome', cors(), async function(request, response, next){
     //Recebe o id encaminhado pela requisição 
    let nome = request.query.nome
@@ -68,7 +68,6 @@ app.get('/v1/Vulpes/Alunos/nome', cors(), async function(request, response, next
 
 })
 
-//delete aluno ok
 app.delete('/v1/Vulpes/Alunos/:id', cors(), async function(request, response){
     let idAluno = request.params.id
     let dadosAluno = await controllerAlunos.setExcluirAluno(idAluno)
@@ -77,6 +76,24 @@ app.delete('/v1/Vulpes/Alunos/:id', cors(), async function(request, response){
     response.json(dadosAluno)
 })
 
+app.put('/v1/Vulpes/atualiza/Alunos/:id', cors(), bodyParserJson, async function (request, response) {
+    let contentType = request.headers['content-type']
+    let idAluno = request.params.id
+    let dadosPut = request.body
+    let dadosAluno = await controllerAlunos.setAtualizarAluno(idAluno, dadosPut, contentType)
+
+    response.status(dadosAluno.status_code)
+    response.json(dadosAluno)
+})
+
+app.post('/v1/Vulpes/Inserir/Alunos', cors(), bodyParserJson, async function(request, response, next){
+    let contentType = request.headers['content-type'];
+    let dadosBody = request.body;
+
+    let resultAlunos = await controllerAlunos.setInserirNovoAluno(dadosBody, contentType);
+
+    response.status(resultAlunos.status_code).json(resultAlunos);
+});
 
 /////////////////////////////////// PROFESSOR ///////////////////////////////////
 
@@ -122,6 +139,15 @@ app.delete('/v1/Vulpes/Professor/:id', cors(), async function(request, response)
     response.status(200)
     response.json(dadosProfessor)
 })
+
+app.post('/v1/Vulpes/Inserir/Professor', cors(), bodyParserJson, async function(request, response, next){
+    let contentType = request.headers['content-type'];
+    let dadosBody = request.body;
+
+    let resultProf = await controllerProfessor.setInserirNovoProfessor(dadosBody, contentType);
+
+    response.status(resultProf.status_code).json(resultProf);
+});
 
 
 
@@ -262,6 +288,104 @@ app.delete('/v1/Vulpes/dadosGestao/:id', cors(), async function(request, respons
     response.json(dadosGestao)
 })
 
+/////////////////////////////////// RESPONSAVEL ///////////////////////////////////
+
+
+app.get('/v1/Vulpes/Responsavel', cors(), async function(request, response, next){
+    let dadosResponsavel = await controllerResponsavel.getListarResponsavel()
+    
+
+    if(dadosResponsavel) {
+
+        response.json(dadosResponsavel)
+        response.status(200)
+
+    } else {
+        response.json({message: 'Nenhum registro encontrado'})
+        response.status(200)
+    }
+})
+
+
+app.get('/v1/Vulpes/Responsavel/:id', cors(), async function(request, response, next){
+    //Recebe o id encaminhado pela requisição 
+   let idResponsavel = request.params.id
+   let dadosResponsavel = await controllerResponsavel.getBuscarResponsavel(idResponsavel)
+
+   response.status(dadosResponsavel.status_code)
+   response.json(dadosResponsavel)
+
+})
+
+
+app.get('/v1/Vulpes/Responsavel/nome', cors(), async function(request, response, next){
+    //Recebe o id encaminhado pela requisição 
+   let nome = request.query.nome
+   let dadosResponsavel = await controllerResponsavel.getNameResponsavel(nome)
+
+   response.status(dadosResponsavel.status_code)
+   response.json(dadosResponsavel)
+
+})
+
+
+app.delete('/v1/Vulpes/Responsavel/:id', cors(), async function(request, response){
+    let idResponsavel = request.params.id
+    let dadosResponsavel = await controllerResponsavel.setExcluirResponsavel(idResponsavel)
+
+    response.status(200)
+    response.json(dadosResponsavel)
+})
+
+
+/////////////////////////////////// AVISO ///////////////////////////////////
+
+
+app.get('/v1/Vulpes/Aviso', cors(), async function(request, response, next){
+    let dadosAviso = await controllerAviso.getListarAviso()
+    
+
+    if(dadosAviso) {
+
+        response.json(dadosAviso)
+        response.status(200)
+
+    } else {
+        response.json({message: 'Nenhum registro encontrado'})
+        response.status(200)
+    }
+})
+
+
+app.get('/v1/Vulpes/Aviso/:id', cors(), async function(request, response, next){
+    //Recebe o id encaminhado pela requisição 
+   let idAviso = request.params.id
+   let dadosAviso = await controllerAviso.getBuscarAviso(idAviso)
+
+   response.status(dadosAviso.status_code)
+   response.json(dadosAviso)
+
+})
+
+
+app.get('/v1/Vulpes/Aviso/nome', cors(), async function(request, response, next){
+    //Recebe o id encaminhado pela requisição 
+   let titulo = request.query.titulo
+   let dadosAviso = await controllerAviso.getNameAviso(titulo)
+
+   response.status(dadosAviso.status_code)
+   response.json(dadosAviso)
+
+})
+
+
+app.delete('/v1/Vulpes/Aviso/:id', cors(), async function(request, response){
+    let idAviso = request.params.id
+    let dadosAviso = await controllerAviso.setExcluirAviso(idAviso)
+
+    response.status(200)
+    response.json(dadosResponsavel)
+})
 
 app.listen(8080, function(){
     console.log('A API está no ar e aguardando requisições')

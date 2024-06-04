@@ -9,44 +9,36 @@ const setInserirNovoProfessor = async function (dadosProfessor, contentType) {
         let statusValidated = false
         let professorJson = {}
 
-
-        if (String(contentType).toLowerCase() == 'application/json') {
-
-            console.log(dadosProfessor)
-
-            if (dadosProfessor.nome == '' || dadosProfessor.nome == undefined || dadosProfessor.nome == null || dadosProfessor.nome.length > 100 ||
-                dadosProfessor.email == '' || dadosProfessor.email == undefined || dadosProfessor.email == null || dadosProfessor.email.length > 12 ||
-                dadosProfessor.numero_matricula == '' || dadosProfessor.numero_matricula == undefined || dadosProfessor.numero_matricula == null || isNaN(dadosProfessor.numero_matricula) ||
-                dadosProfessor.telefone == '' || dadosProfessor.telefone == undefined || dadosProfessor.telefone == null || isNaN(dadosProfessor.telefone)
-            ) {
-                return message.ERROR_REQUIRED_FIELDS
-
-            } else {
-                statusValidated = true
-            }
-
-            if (statusValidated === true) {
-                //ecaminha os dados para o dao
-                let novoprofessorJson = await professorDAO.insertNovoProfessor(dadosProfessor)
-                let id = await professorDAO.selectById()
-
-                professorJson.status = message.SUCESSED_CREATED_ITEM.status
-                professorJson.status_code = message.SUCESSED_CREATED_ITEM.status_code
-                professorJson.message = message.SUCESSED_CREATED_ITEM.message
-                professorJson.professor = dadosProfessor
-                professorJson.id = dadosProfessor.id
-
-                return professorJson
-            }
-        } else {
-
+        if (String(contentType).toLowerCase() !== 'application/json') {
             return message.ERROR_CONTENT_TYPE
 
+        }
+
+        if (!dadosProfessor.nome || dadosProfessor.nome.length > 100 ||
+            !dadosProfessor.email || dadosProfessor.email.length > 12 ||
+            !dadosProfessor.numero_matricula || dadosProfessor.numero_matricula.length > 100 ||
+            !dadosProfessor.telefone || dadosProfessor.telefone.length > 11) {
+
+            return message.ERROR_REQUIRED_FIELDS
+        }
+
+        let novoprofessorJson = await professorDAO.insertNovoProfessor(dadosProfessor)
+
+        if (novoprofessorJson && novoprofessorJson.length > 0) {
+            professorJson.status = message.SUCESSED_CREATED_ITEM.status
+            professorJson.status_code = message.SUCESSED_CREATED_ITEM.status_code
+            professorJson.message = message.SUCESSED_CREATED_ITEM.message
+            professorJson.professor = novoprofessorJson
+            professorJson.id = novoprofessorJson[0].id
+
+            return professorJson
+
+        } else {
+            return message.ERROR_INTERNAL_SERVER_DB
         }
     } catch (error) {
         return message.ERROR_INTERNAL_SERVER
     }
-
 
 }
 

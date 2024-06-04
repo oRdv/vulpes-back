@@ -3,93 +3,74 @@ const alunosDao = require('../module/DAO/aluno.js')
 const { json } = require('body-parser')
 
 const setInserirNovoAluno = async function (dadosAluno, contentType) {
+
     try {
 
         let statusValidated = false
         let alunoJson = {}
 
-
-        if (String(contentType).toLowerCase() == 'application/json') {
-
-            console.log(dadosAluno)
-
-            if (dadosAluno.nome == '' || dadosAluno.nome == undefined || dadosAluno.nome == null || dadosAluno.nome.length > 100 ||
-                dadosAluno.data_nascimento == '' || dadosAluno.data_nascimento == undefined || dadosAluno.data_nascimento == null || dadosAluno.data_nascimento.length > 12 ||
-                dadosAluno.numero_matricula == '' || dadosAluno.numero_matricula == undefined || dadosAluno.numero_matricula == null || isNaN(dadosAluno.numero_matricula) ||
-                dadosAluno.cep == '' || dadosAluno.cep == undefined || dadosAluno.cep == null || isNaN(dadosAluno.cep)
-            ) {
-                return message.ERROR_REQUIRED_FIELDS
-
-            } else {
-                statusValidated = true
-            }
-
-            if (statusValidated === true) {
-                //ecaminha os dados para o dao
-                let novoAlunoJson = await alunosDao.insertNovoAluno(dadosAluno)
-                let id = await alunosDao.selectById()
-
-                alunoJson.status = message.SUCESSED_CREATED_ITEM.status
-                alunoJson.status_code = message.SUCESSED_CREATED_ITEM.status_code
-                alunoJson.message = message.SUCESSED_CREATED_ITEM.message
-                alunoJson.aluno = dadosAluno
-                alunoJson.id = dadosAluno.id
-
-                return alunoJson
-            }
-        } else {
-
+        if (String(contentType).toLowerCase() !== 'application/json') {
             return message.ERROR_CONTENT_TYPE
 
+        }
+
+        if (!dadosAluno.nome || dadosAluno.nome.length > 100 ||
+            !dadosAluno.data_nascimento || dadosAluno.data_nascimento.length > 12 ||
+            !dadosAluno.numero_matricula || dadosAluno.numero_matricula.length > 100 ||
+            !dadosAluno.cep || dadosAluno.cep.length > 8) {
+            return message.ERROR_REQUIRED_FIELDS
+        }
+
+        let novoAlunoJson = await alunosDao.insertNovoAluno(dadosAluno)
+        if (novoAlunoJson && novoAlunoJson.length > 0) {
+            alunoJson.status = message.SUCESSED_CREATED_ITEM.status
+            alunoJson.status_code = message.SUCESSED_CREATED_ITEM.status_code
+            alunoJson.message = message.SUCESSED_CREATED_ITEM.message
+            alunoJson.aluno = novoAlunoJson
+            alunoJson.id = novoAlunoJson[0].id
+            return alunoJson;
+        } else {
+            return message.ERROR_INTERNAL_SERVER_DB
         }
     } catch (error) {
         return message.ERROR_INTERNAL_SERVER
     }
-
-
 }
 
 const setAtualizarAluno = async function (id, dadosAluno, contentType) {
+    let alunoJson = {};
     try {
-
-        if (String(contentType).toLowerCase() == 'application/json') {
-            let statusValidated = false
-            let atorJson = {}
-
-            if (dadosAluno.nome == '' || dadosAluno.nome == undefined || dadosAluno.nome == null || dadosAluno.nome.length > 100 ||
-                dadosAluno.data_nascimento == '' || dadosAluno.data_nascimento == undefined || dadosAluno.data_nascimento == null || dadosAluno.data_nascimento.length > 12 ||
-                dadosAluno.numero_matricula == '' || dadosAluno.numero_matricula == undefined || dadosAluno.numero_matricula == null || isNaN(dadosAluno.numero_matricula) ||
-                dadosAluno.cep == '' || dadosAluno.cep == undefined || dadosAluno.cep == null || isNaN(dadosAluno.cep)
-            ) {
-                return message.ERROR_REQUIRED_FIELDS
-            } else {
-
-                statusValidated = true
-            }
-            if (statusValidated === true) {
-                //ecaminha os dados para o dao
-                let novoAlunoJson = await alunosDao.insertNovoAluno(dadosAluno)
-                let id = await alunosDao.selectById()
-
-                alunoJson.status = message.SUCESSED_CREATED_ITEM.status
-                alunoJson.status_code = message.SUCESSED_CREATED_ITEM.status_code
-                alunoJson.message = message.SUCESSED_CREATED_ITEM.message
-                alunoJson.aluno = dadosAluno
-                alunoJson.id = dadosAluno.id
-
-                return alunoJson
-            }
-        } else {
-
-            return message.ERROR_CONTENT_TYPE
+        if (String(contentType).toLowerCase() !== 'application/json') {
+            return message.ERROR_CONTENT_TYPE;
         }
 
+        if (!id || isNaN(id) ||
+            dadosAluno.nome === '' || dadosAluno.nome === undefined || dadosAluno.nome === null || dadosAluno.nome.length > 100 ||
+            dadosAluno.data_nascimento === '' || dadosAluno.data_nascimento === undefined || dadosAluno.data_nascimento === null || dadosAluno.data_nascimento.length > 12 ||
+            dadosAluno.numero_matricula === '' || dadosAluno.numero_matricula === undefined || dadosAluno.numero_matricula === null || isNaN(dadosAluno.numero_matricula) ||
+            dadosAluno.cep === '' || dadosAluno.cep === undefined || dadosAluno.cep === null || isNaN(dadosAluno.cep)
+        ) {
+            return message.ERROR_REQUIRED_FIELDS;
+        }
+
+        dadosAluno.id = id;
+        let novoAluno = await alunosDao.updateAluno(dadosAluno);
+
+        if (novoAluno) {
+            alunoJson.status = message.SUCCESSED_UPDATED_ITEM;
+            alunoJson.status_code = message.SUCCESSED_UPDATED_ITEM.status_code;
+            alunoJson.message = message.SUCCESSED_UPDATED_ITEM.message;
+            alunoJson.aluno = dadosAluno;
+
+            return alunoJson;
+        } else {
+            return message.ERROR_INTERNAL_SERVER_DB; // Erro interno do servidor
+        }
     } catch (error) {
-
-        return message.ERROR_INTERNAL_SERVER
-
+        return message.ERROR_INTERNAL_SERVER; // Erro interno do servidor
     }
 }
+
 
 const setExcluirAluno = async function (id) {
 
