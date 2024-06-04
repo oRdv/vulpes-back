@@ -178,15 +178,6 @@ app.get('/v1/Vulpes/Frequencia/:id', cors(), async function(request, response, n
 
 })
 
-// app.get('/v1/Vulpes/Professor/nome', cors(), async function(request, response, next){
-//     //Recebe o id encaminhado pela requisição 
-//    let nome = request.query.nome
-//    let dadosFrequencia = await controllerFrequencia.(nome)
-
-//    response.status(dadosFrequencia.status_code)
-//    response.json(dadosFrequencia)
-
-// })
 
 app.delete('/v1/Vulpes/Frequencia/:id', cors(), async function(request, response){
     let idFrequencia = request.params.id
