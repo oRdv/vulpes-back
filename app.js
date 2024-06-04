@@ -25,7 +25,7 @@ const controllerDisciplina = require('./controller/controller_disciplina.js')
 const controllerGestao = require('./controller/controller_gestao.js')
 const controllerResponsavel = require('./controller/controller_responsavel.js')
 const controllerAviso = require('./controller/controller_aviso.js')
-const { isInt8Array } = require('util/types')
+const controllerNota = require('./controller/controller_nota.js')
 
 
 /////////////////////////////////// ALUNO ///////////////////////////////////
@@ -385,6 +385,44 @@ app.delete('/v1/Vulpes/Aviso/:id', cors(), async function(request, response){
 
     response.status(200)
     response.json(dadosResponsavel)
+})
+
+/////////////////////////////////// NOTA ///////////////////////////////////
+
+
+app.get('/v1/Vulpes/Nota', cors(), async function(request, response, next){
+    let dadosNota = await controllerNota.getListarNota()
+    
+
+    if(dadosNota) {
+
+        response.json(dadosNota)
+        response.status(200)
+
+    } else {
+        response.json({message: 'Nenhum registro encontrado'})
+        response.status(200)
+    }
+})
+
+
+app.get('/v1/Vulpes/Nota/:id', cors(), async function(request, response, next){
+    //Recebe o id encaminhado pela requisição 
+   let idNota = request.params.id
+   let dadosNota = await controllerNota.getBuscarNota(idNota)
+
+   response.status(dadosNota.status_code)
+   response.json(dadosNota)
+
+})
+
+
+app.delete('/v1/Vulpes/Nota/:id', cors(), async function(request, response){
+    let idNota = request.params.id
+    let dadosNota = await controllerNota.setExcluirNota(idNota)
+
+    response.status(200)
+    response.json(dadosNota)
 })
 
 app.listen(8080, function(){
