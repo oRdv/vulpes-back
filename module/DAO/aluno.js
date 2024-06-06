@@ -116,6 +116,19 @@ const deleteAluno = async function (id) {
     }
 }
 
+const selectResponsavelAluno = async function (id) {
+    try {
+    
+        let sql = `select * from tbl_aluno inner join tbl_aluno_responsavel on tbl_aluno.id = tbl_aluno_responsavel.id_aluno where tbl_aluno_responsavel.id_responsavel = ${id}`;
+
+        let rsAlunos = await prisma.$queryRawUnsafe(sql);
+
+        return rsAlunos;
+    } catch (error) {
+        return false;
+    }
+}
+
 
 module.exports = {
     insertNovoAluno,
@@ -123,6 +136,7 @@ module.exports = {
     deleteAluno,
     selectAllAlunos,
     selectById,
-    selectByNameAluno
+    selectByNameAluno,
+    selectResponsavelAluno
 
 }

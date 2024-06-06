@@ -28,6 +28,7 @@ const controllerAviso = require('./controller/controller_aviso.js')
 const controllerNota = require('./controller/controller_nota.js')
 const controllerModalidade = require('./controller/controller_modalidade.js')
 const controllerComunicado = require('./controller/controller_comunicado.js')
+const controllerTurma = require('./controller/controller_turma.js')
 
 
 /////////////////////////////////// ALUNO ///////////////////////////////////
@@ -69,6 +70,19 @@ app.get('/v1/Vulpes/Alunos/nome', cors(), async function(request, response, next
    response.json(dadosAluno)
 
 })
+
+app.get('/v1/Vulpes/Alunos/Responsavel/:id', async (req, res) => {
+    try {
+        const id = parseInt(req.params.id, 10);  // Extrair o ID da URL
+        console.log('ID extraído da URL:', id);  // Log para verificar o ID extraído
+
+        const response = await controllerAlunos.getAlunoResponse(id);
+    } catch (error) {
+        console.error(error);  // Log de erro
+    }
+});
+
+
 
 app.delete('/v1/Vulpes/Alunos/:id', cors(), async function(request, response){
     let idAluno = request.params.id
@@ -511,7 +525,7 @@ app.get('/v1/Vulpes/Comunicado/:id', cors(), async function(request, response, n
 app.get('/v1/Vulpes/Comunicado/titulo', cors(), async function(request, response, next){
     //Recebe o id encaminhado pela requisição 
    let titulo = request.query.titulo
-   let dadosComunicado = await controllerComunicado.getNameComunicado(nome)
+   let dadosComunicado = await controllerComunicado.getNameComunicado(titulo)
 
    response.status(dadosComunicado.status_code)
    response.json(dadosComunicado)
@@ -527,7 +541,53 @@ app.delete('/v1/Vulpes/Comunicado/:id', cors(), async function(request, response
     response.json(dadosComunicado)
 })
 
+/////////////////////////////////// TURMA ///////////////////////////////////
 
+
+app.get('/v1/Vulpes/Turma', cors(), async function(request, response, next){
+    let dadosTurma = await controllerTurma.getListarTurma()
+
+    if(dadosTurma) {
+
+        response.json(dadosTurma)
+        response.status(200)
+
+    } else {
+        response.json({message: 'Nenhum registro encontrado'})
+        response.status(200)
+    }
+})
+
+
+app.get('/v1/Vulpes/Turma/:id', cors(), async function(request, response, next){
+    //Recebe o id encaminhado pela requisição 
+   let idTurma = request.params.id
+   let dadosTurma = await controllerTurma.getBuscarTurma(idTurma)
+
+   response.status(dadosTurma.status_code)
+   response.json(dadosTurma)
+
+})
+
+
+app.get('/v1/Vulpes/Turma/nome', cors(), async function(request, response, next){
+    //Recebe o id encaminhado pela requisição 
+   let nome = request.query.nome
+   let dadosTurma = await controllerTurma.getNameTurma(nome)
+
+   response.status(dadosTurma.status_code)
+   response.json(dadosTurma)
+
+})
+
+
+app.delete('/v1/Vulpes/Turma/:id', cors(), async function(request, response){
+    let idTurma = request.params.id
+    let dadosTurma = await controllerComunicado.setExcluirComunicado(idTurma)
+
+    response.status(200)
+    response.json(dadosTurma)
+})
 
 
 app.listen(8080, function(){

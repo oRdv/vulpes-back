@@ -4,6 +4,7 @@ const { json } = require('body-parser')
 const aluno = require('../module/DAO/aluno.js')
 
 const setInserirNovoProfessor = async function (dadosProfessor, contentType) {
+
     try {
 
         let statusValidated = false
@@ -15,31 +16,27 @@ const setInserirNovoProfessor = async function (dadosProfessor, contentType) {
         }
 
         if (!dadosProfessor.nome || dadosProfessor.nome.length > 100 ||
-            !dadosProfessor.email || dadosProfessor.email.length > 12 ||
+            !dadosProfessor.email  || dadosProfessor.email.length > 100 ||
             !dadosProfessor.numero_matricula || dadosProfessor.numero_matricula.length > 100 ||
-            !dadosProfessor.telefone || dadosProfessor.telefone.length > 11) {
-
+            !dadosProfessor.telefone || dadosProfessor.telefone .length > 11) {
             return message.ERROR_REQUIRED_FIELDS
         }
 
-        let novoprofessorJson = await professorDAO.insertNovoProfessor(dadosProfessor)
-
-        if (novoprofessorJson && novoprofessorJson.length > 0) {
+        let novoProfessorJson = await professorDAO.insertNovoProfessor(dadosProfessor)
+        
+        if (novoProfessorJson && novoProfessorJson.length > 0) {
             professorJson.status = message.SUCESSED_CREATED_ITEM.status
             professorJson.status_code = message.SUCESSED_CREATED_ITEM.status_code
             professorJson.message = message.SUCESSED_CREATED_ITEM.message
-            professorJson.professor = novoprofessorJson
-            professorJson.id = novoprofessorJson[0].id
-
-            return professorJson
-
+            professorJson.professor = novoProfessorJson
+            professorJson.id = novoProfessorJson[0].id
+            return professorJson;
         } else {
             return message.ERROR_INTERNAL_SERVER_DB
         }
     } catch (error) {
         return message.ERROR_INTERNAL_SERVER
     }
-
 }
 
 const setAtualizarProfessor = async function (id, dadosProfessor, contentType) {
@@ -61,7 +58,7 @@ const setAtualizarProfessor = async function (id, dadosProfessor, contentType) {
             }
             if (statusValidated === true) {
                 //ecaminha os dados para o dao
-                let novoprofessorJson = await professorDAO.insertNovoProfessor(dadosProfessor)
+                let novoProfessorJson = await professorDAO.insertNovoProfessor(dadosProfessor)
                 let id = await professorDAO.selectById()
 
                 professorJson.status = message.SUCESSED_CREATED_ITEM.status

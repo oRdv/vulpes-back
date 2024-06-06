@@ -75,18 +75,18 @@ const setAtualizarAluno = async function (id, dadosAluno, contentType) {
 const setExcluirAluno = async function (id) {
 
     try {
-        let idAluno = id
+        let idResponsavel = id
 
         //Validação para verificar se o ID é válido (vazio, indefinido ou não numérico)
-        if (idAluno == '' || idAluno == undefined || isNaN(idAluno) || idAluno == null) {
+        if (idResponsavel == '' || idResponsavel == undefined || isNaN(idResponsavel) || idResponsavel == null) {
             return message.ERROR_INVALID_ID //400
         } else {
             
-            let alunoId = await alunosDao.selectById(idAluno)
+            let alunoId = await alunosDao.selectById(idResponsavel)
 
             if(alunoId.length > 0) {
 
-                let alunosDeleted = await alunosDao.deleteAluno(idAluno)
+                let alunosDeleted = await alunosDao.deleteAluno(idResponsavel)
                 
                 if(alunosDeleted){
                     return message.SUCCESSED_DELETED_ITEM //200
@@ -126,16 +126,16 @@ const getListarAluno = async function () {
 const getBuscarAluno = async function (id) {
     try {
 
-        let idAluno = id
+        let idResponsavel = id
         let alunosJson = {}
 
-        if (idAluno == '' || idAluno == undefined || isNaN(idAluno)) {
+        if (idResponsavel == '' || idResponsavel == undefined || isNaN(idResponsavel)) {
 
             return message.ERROR_INVALID_ID
 
         } else {
 
-            let dadosAluno = await alunosDao.selectById(idAluno)
+            let dadosAluno = await alunosDao.selectById(idResponsavel)
 
             if (dadosAluno.length > 0) {
 
@@ -188,11 +188,39 @@ const getNameAluno = async function (nome) {
     }
 }
 
+
+const getAlunoResponse = async function (id) {
+    try {
+
+        let idResponsavel = id;
+        let alunosJson = {};
+
+        if (idResponsavel === '' || idResponsavel === undefined || isNaN(idResponsavel)) {
+            return message.ERROR_INVALID_ID;
+        } else {
+            let dadosAluno = await alunosDao.selectResponsavelAluno(idResponsavel);
+
+            if (dadosAluno.length > 0) {
+                alunosJson.aluno = dadosAluno;
+                alunosJson.status_code = 200;
+
+                return alunosJson;
+            } else {
+                return message.ERROR_NOT_FOUND;
+            }
+        }
+    } catch (error) {
+        console.error(error);  // Log de erro
+        return message.ERROR_INTERNAL_SERVER;
+    }
+};
+
 module.exports = {
     setInserirNovoAluno,
     setAtualizarAluno,
     setExcluirAluno,
     getListarAluno,
     getBuscarAluno,
-    getNameAluno
+    getNameAluno,
+    getAlunoResponse
 }
