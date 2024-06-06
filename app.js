@@ -27,6 +27,7 @@ const controllerResponsavel = require('./controller/controller_responsavel.js')
 const controllerAviso = require('./controller/controller_aviso.js')
 const controllerNota = require('./controller/controller_nota.js')
 const controllerModalidade = require('./controller/controller_modalidade.js')
+const controllerComunicado = require('./controller/controller_comunicado.js')
 
 
 /////////////////////////////////// ALUNO ///////////////////////////////////
@@ -476,6 +477,56 @@ app.delete('/v1/Vulpes/Modalidade/:id', cors(), async function(request, response
     response.status(200)
     response.json(dadosModalidade)
 })
+
+/////////////////////////////////// COMUNICADO ///////////////////////////////////
+
+
+app.get('/v1/Vulpes/Comunicado', cors(), async function(request, response, next){
+    let dadosComunicado = await controllerComunicado.getListarComunicado()
+    
+
+    if(dadosComunicado) {
+
+        response.json(dadosComunicado)
+        response.status(200)
+
+    } else {
+        response.json({message: 'Nenhum registro encontrado'})
+        response.status(200)
+    }
+})
+
+
+app.get('/v1/Vulpes/Comunicado/:id', cors(), async function(request, response, next){
+    //Recebe o id encaminhado pela requisição 
+   let idComunicado = request.params.id
+   let dadosComunicado = await controllerComunicado.getBuscarComunicado(idComunicado)
+
+   response.status(dadosComunicado.status_code)
+   response.json(dadosComunicado)
+
+})
+
+
+app.get('/v1/Vulpes/Comunicado/titulo', cors(), async function(request, response, next){
+    //Recebe o id encaminhado pela requisição 
+   let titulo = request.query.titulo
+   let dadosComunicado = await controllerComunicado.getNameComunicado(nome)
+
+   response.status(dadosComunicado.status_code)
+   response.json(dadosComunicado)
+
+})
+
+
+app.delete('/v1/Vulpes/Comunicado/:id', cors(), async function(request, response){
+    let idComunicado = request.params.id
+    let dadosComunicado = await controllerComunicado.setExcluirComunicado(idComunicado)
+
+    response.status(200)
+    response.json(dadosComunicado)
+})
+
 
 
 
