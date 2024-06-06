@@ -56,15 +56,16 @@ const selectByNameProfessor = async function (nome) {
 const insertNovoProfessor = async function(dadosProfessor) {
 
     try {
-        const sql = `INSERT INTO tbl_professor(nome, 
+        const sql = `INSERT INTO tbl_professor(
+                                            nome, 
                                             email , 
                                             numero_matricula , 
                                             telefone)
                                             VALUES (
-                                                '${dadosAluno.nome}', 
-                                                '${dadosAluno.email }', 
-                                                '${dadosAluno.numero_matricula }', 
-                                                '${dadosAluno.telefone}')`
+                                                '${dadosProfessor.nome}', 
+                                                '${dadosProfessor.email }', 
+                                                '${dadosProfessor.numero_matricula }', 
+                                                '${dadosProfessor.telefone}');`
 
         const result = await prisma.$queryRawUnsafe(sql)
         if (result) {
@@ -79,7 +80,6 @@ const insertNovoProfessor = async function(dadosProfessor) {
         return false
     }
 }
-
 
 const updateProfessor = async function () {
     try {

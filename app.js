@@ -214,6 +214,16 @@ app.delete('/v1/Vulpes/Frequencia/:id', cors(), async function(request, response
     response.json(dadosFrequencia)
 })
 
+app.post('/v1/Vulpes/Inserir/Frequencia', cors(), bodyParserJson, async function(request, response, next){
+    let contentType = request.headers['content-type'];
+    let dadosBody = request.body;
+
+    let resultFrequencia= await controllerFrequencia.setInserirNovaFrequencia(dadosBody, contentType);
+
+    response.status(resultFrequencia.status_code).json(resultFrequencia);
+});
+
+
 
 /////////////////////////////////// DISCIPLINA ///////////////////////////////////
 
@@ -241,6 +251,15 @@ app.get('/v1/Vulpes/Disciplina/:id', cors(), async function(request, response, n
    response.json(dadosDisciplina)
 
 })
+
+app.post('/v1/Vulpes/Inserir/Disciplina', cors(), bodyParserJson, async function(request, response, next){
+    let contentType = request.headers['content-type'];
+    let dadosBody = request.body;
+
+    let resultDisciplina= await controllerDisciplina.setInserirNovaDisciplina(dadosBody, contentType);
+
+    response.status(resultDisciplina.status_code).json(resultDisciplina);
+});
 
 // app.get('/v1/Vulpes/Professor/nome', cors(), async function(request, response, next){
 //     //Recebe o id encaminhado pela requisição 

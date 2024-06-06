@@ -42,18 +42,20 @@ const insertNovaFrequencia = async function(dadosFrequencia) {
         
         let sql
 
-        sql = `INSERT INTO tbl_frequencia (dia_letivo, 
+        sql = `INSERT INTO tbl_frequencia (
+                                     dia_letivo, 
                                      id_aluno,
                                      id_disciplina,
-                                     presenca)
+                                     presenca
+                                    )
                                      VALUES (
                                          '${dadosFrequencia.dia_letivo}',
                                          '${dadosFrequencia.id_aluno}',
                                          '${dadosFrequencia.id_disciplina}',
-                                         '${dadosFrequencia.presenca}'
-                                     )`
+                                         ${dadosFrequencia.presenca}
+                                     );`
 
-        console.log(sql)
+                                     console.log(sql)
 
         let result = await prisma.$queryRawUnsafe(sql)
         if (result) {

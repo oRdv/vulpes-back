@@ -4,39 +4,54 @@ const { json } = require('body-parser')
 const aluno = require('../module/DAO/aluno.js')
 
 const setInserirNovoProfessor = async function (dadosProfessor, contentType) {
-
     try {
 
-        let statusValidated = false
-        let professorJson = {}
+        if (String(contentType).toLowerCase() == 'application/json') {
 
-        if (String(contentType).toLowerCase() !== 'application/json') {
-            return message.ERROR_CONTENT_TYPE
+            let statusValidated = false
+            let professorJson = {}
+            
+            if (
+                dadosProfessor.nome == null || dadosProfessor.nome == undefined || dadosProfessor.nome.length > 100 ||
+                dadosProfessor.email == null || dadosProfessor.email == undefined || dadosProfessor.email.length > 12 ||
+                dadosProfessor.numero_matricula == null || dadosProfessor.numero_matricula == undefined || isNaN(dadosProfessor.numero_matricula) || dadosProfessor.numero_matricula.length > 100 ||
+                dadosProfessor.telefone == null || dadosProfessor.telefone == undefined || dadosProfessor.telefone.length > 11
+            ) {
+                return message.ERROR_REQUIRED_FIELDS
+    
+            } else {
+    
+                statusValidated = true;
+            }
+    
+            if (statusValidated) {
+    
+                let novoprofessorJson = await professorDAO.insertNovoProfessor(dadosProfessor);
+    
+                if (novoprofessorJson) {
+                    professorJson.status = message.SUCESSED_CREATED_ITEM.status
+                    professorJson.status_code = message.SUCESSED_CREATED_ITEM.status_code
+                    professorJson.message = message.SUCESSED_CREATED_ITEM.message
+                    professorJson.professor = novoprofessorJson
+                    professorJson.id = novoprofessorJson[0].id
+    
+                    return professorJson
+    
+                } else {
+    
+                    return message.ERROR_INTERNAL_SERVER_DB
+                }
+            }
 
-        }
-
-        if (!dadosProfessor.nome || dadosProfessor.nome.length > 100 ||
-            !dadosProfessor.email  || dadosProfessor.email.length > 100 ||
-            !dadosProfessor.numero_matricula || dadosProfessor.numero_matricula.length > 100 ||
-            !dadosProfessor.telefone || dadosProfessor.telefone .length > 11) {
-            return message.ERROR_REQUIRED_FIELDS
-        }
-
-        let novoProfessorJson = await professorDAO.insertNovoProfessor(dadosProfessor)
-        
-        if (novoProfessorJson && novoProfessorJson.length > 0) {
-            professorJson.status = message.SUCESSED_CREATED_ITEM.status
-            professorJson.status_code = message.SUCESSED_CREATED_ITEM.status_code
-            professorJson.message = message.SUCESSED_CREATED_ITEM.message
-            professorJson.professor = novoProfessorJson
-            professorJson.id = novoProfessorJson[0].id
-            return professorJson;
         } else {
-            return message.ERROR_INTERNAL_SERVER_DB
+
+            return message.ERROR_CONTENT_TYPE
         }
-    } catch (error) {
+    } 
+    catch (error) {
         return message.ERROR_INTERNAL_SERVER
     }
+
 }
 
 const setAtualizarProfessor = async function (id, dadosProfessor, contentType) {
