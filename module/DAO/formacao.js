@@ -104,12 +104,48 @@ const deleteFormacao = async function (id) {
 }
 
 
+const selectByNameUniversidade = async function (universidade) {
+
+    try {
+        
+        let sql = `select * from tbl_formacao where universidade like "%${universidade}%"`
+
+        let rsFormacao = await prisma.$queryRawUnsafe(sql)
+        
+
+        return rsFormacao
+
+    } catch (error) {
+        return false
+    }
+
+}
+
+const selectByNameCurso = async function (curso) {
+
+    try {
+        
+        let sql = `select * from tbl_formacao where curso like "%${curso}%"`
+
+        let rsFormacao = await prisma.$queryRawUnsafe(sql)
+        
+
+        return rsFormacao
+
+    } catch (error) {
+        return false
+    }
+
+}
+
+
 module.exports = {
     insertNovaFormacao,
     updatFormacao,
     deleteFormacao,
     selectAllFormacao,
-    selectById
-    
+    selectById,
+    selectByNameUniversidade,
+    selectByNameCurso
 
 }
