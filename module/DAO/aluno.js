@@ -9,7 +9,11 @@ const selectAllAlunos = async function() {
 
         let sql = "select * from tbl_aluno"
 
+        console.log(sql);
+
         let rsAluno = await prisma.$queryRawUnsafe(sql)
+
+        console.log(rsAluno);
 
         return rsAluno
 
