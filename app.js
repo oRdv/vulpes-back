@@ -26,6 +26,7 @@ const controllerGestao = require('./controller/controller_gestao.js')
 const controllerResponsavel = require('./controller/controller_responsavel.js')
 const controllerAviso = require('./controller/controller_aviso.js')
 const controllerNota = require('./controller/controller_nota.js')
+const controllerModalidade = require('./controller/controller_modalidade.js')
 
 
 /////////////////////////////////// ALUNO ///////////////////////////////////
@@ -148,6 +149,17 @@ app.post('/v1/Vulpes/Inserir/Professor', cors(), bodyParserJson, async function(
 
     response.status(resultProf.status_code).json(resultProf);
 });
+
+app.put('/v1/Vulpes/atualiza/Professor/:id', cors(), bodyParserJson, async function (request, response) {
+    let contentType = request.headers['content-type']
+    let idProfessor = request.params.id
+    let dadosPut = request.body
+    let dadosProfessor = await controllerAlunos.setAtualizarAluno(idProfessor, dadosPut, contentType)
+
+    response.status(dadosProfessor.status_code)
+    response.json(dadosProfessor)
+})
+
 
 
 
@@ -415,6 +427,57 @@ app.delete('/v1/Vulpes/Nota/:id', cors(), async function(request, response){
     response.status(200)
     response.json(dadosNota)
 })
+
+/////////////////////////////////// MODALIDADE ///////////////////////////////////
+
+
+app.get('/v1/Vulpes/Modalidade', cors(), async function(request, response, next){
+    let dadosModalidade = await controllerModalidade.getListarModalidade()
+    
+
+    if(dadosModalidade) {
+
+        response.json(dadosModalidade)
+        response.status(200)
+
+    } else {
+        response.json({message: 'Nenhum registro encontrado'})
+        response.status(200)
+    }
+})
+
+
+app.get('/v1/Vulpes/Modalidade/:id', cors(), async function(request, response, next){
+    //Recebe o id encaminhado pela requisição 
+   let idModalidade = request.params.id
+   let dadosModalidade = await controllerModalidade.getBuscarModalidade(idModalidade)
+
+   response.status(dadosModalidade.status_code)
+   response.json(dadosModalidade)
+
+})
+
+
+app.get('/v1/Vulpes/Modalidade/nome', cors(), async function(request, response, next){
+    //Recebe o id encaminhado pela requisição 
+   let nome = request.query.nome
+   let dadosModalidade = await controllerModalidade.getNameModalidade(nome)
+
+   response.status(dadosModalidade.status_code)
+   response.json(dadosModalidade)
+
+})
+
+
+app.delete('/v1/Vulpes/Modalidade/:id', cors(), async function(request, response){
+    let idModalidade = request.params.id
+    let dadosModalidade = await controllerModalidade.setExcluirModalidade(idModalidade)
+
+    response.status(200)
+    response.json(dadosModalidade)
+})
+
+
 
 app.listen(8080, function(){
     console.log('A API está no ar e aguardando requisições')

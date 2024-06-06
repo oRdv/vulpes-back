@@ -68,7 +68,7 @@ const setAtualizarDisciplina = async function (id, dadosDisciplina, contentType)
                 disciplinaJson.status = message.SUCESSED_CREATED_ITEM.status
                 disciplinaJson.status_code = message.SUCESSED_CREATED_ITEM.status_code
                 disciplinaJson.message = message.SUCESSED_CREATED_ITEM.message
-                disciplinaJson.aluno = dadosDisciplina
+                disciplinaJson.modalidade = dadosDisciplina
                 disciplinaJson.id = dadosDisciplina.id
 
                 return disciplinaJson
