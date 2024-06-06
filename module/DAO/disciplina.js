@@ -52,7 +52,6 @@ const selectByNameDisciplina = async function (nome) {
     }
 
 }
-
 const insertNovaDisciplina = async function(dadosDisciplina) {
     try {
         
@@ -61,7 +60,7 @@ const insertNovaDisciplina = async function(dadosDisciplina) {
         sql = `INSERT INTO tbl_disciplina (nome)
                                      VALUES (
                                          '${dadosDisciplina.nome}'
-                                     )`
+                                     );`
 
         console.log(sql)
         let result = await prisma.$queryRawUnsafe(sql)

@@ -6,49 +6,55 @@ const { json } = require('body-parser')
 const setInserirNovaFrequencia = async function (dadosFrequencia, contentType) {
     try {
 
-        let statusValidated = false
-        let frequenciaJson = {}
-
-
         if (String(contentType).toLowerCase() == 'application/json') {
 
-            console.log(dadosFrequencia)
 
-            if (dadosFrequencia.dia_letivo  == '' || dadosFrequencia.dia_letivo  == undefined || dadosFrequencia.dia_letivo  == null || isNaN(dadosFrequencia.dia_letivo)||
-                dadosFrequencia.id_aluno  == '' || dadosFrequencia.id_aluno  == undefined || dadosFrequencia.id_aluno  == null || isNaN(dadosFrequencia.id_aluno )||
+            let statusValidated = false
+            let frequenciaJson = {}
+            
+            if (
+                dadosFrequencia.dia_letivo  == '' || dadosFrequencia.dia_letivo  == undefined || dadosFrequencia.dia_letivo  == null || dadosFrequencia.dia_letivo.length != 10 || 
+                dadosFrequencia.id_aluno  == '' || dadosFrequencia.id_aluno  == undefined || dadosFrequencia.id_aluno  == null || isNaN(dadosFrequencia.id_aluno )|| 
                 dadosFrequencia.id_disciplina  == '' || dadosFrequencia.id_disciplina  == undefined || dadosFrequencia.id_disciplina  == null || isNaN(dadosFrequencia.id_disciplina ) ||
-                dadosFrequencia.presenca  == '' || dadosFrequencia.presenca  == undefined || dadosFrequencia.presenca  == null || isNaN(dadosFrequencia.presenca )
+                dadosFrequencia.presenca === '' || dadosFrequencia.presenca === undefined || dadosFrequencia.presenca === null || typeof dadosFrequencia.presenca !== 'boolean'
             ) {
                 return message.ERROR_REQUIRED_FIELDS
-
+    
             } else {
-                statusValidated = true
+    
+                statusValidated = true;
+            }
+    
+            if (statusValidated) {
+    
+                let novafrequenciaJson = await frequenciaDAO.insertNovaFrequencia(dadosFrequencia);
+    
+                if (novafrequenciaJson) {
+                    frequenciaJson.status = message.SUCESSED_CREATED_ITEM.status
+                    frequenciaJson.status_code = message.SUCESSED_CREATED_ITEM.status_code
+                    frequenciaJson.message = message.SUCESSED_CREATED_ITEM.message
+                    frequenciaJson.frequencia = novoprofessorJson
+                    frequenciaJson.id = novafrequenciaJson[0].id
+    
+                    return frequenciaJson
+    
+                } else {
+    
+                    return message.ERROR_INTERNAL_SERVER_DB
+                }
             }
 
-            if (statusValidated === true) {
-                //ecaminha os dados para o dao
-                let novofrequenciaJson = await frequenciaDAO.insertNovaFrequencia(dadosFrequencia)
-                let id = await frequenciaDAO.selectById()
-
-                frequenciaJson.status = message.SUCESSED_CREATED_ITEM.status
-                frequenciaJson.status_code = message.SUCESSED_CREATED_ITEM.status_code
-                frequenciaJson.message = message.SUCESSED_CREATED_ITEM.message
-                frequenciaJson.frequencia = dadosFrequencia
-                frequenciaJson.id = dadosFrequencia.id
-
-                return frequenciaJson
-            }
         } else {
 
             return message.ERROR_CONTENT_TYPE
-
         }
-    } catch (error) {
+    } 
+    catch (error) {
         return message.ERROR_INTERNAL_SERVER
     }
 
-
 }
+
 
 const setAtualizarFrequencia = async function (id, dadosFrequencia, contentType) {
     try {
