@@ -361,6 +361,16 @@ app.delete('/v1/Vulpes/dadosGestao/:id', cors(), async function (request, respon
     response.json(dadosGestao)
 })
 
+
+app.post('/v1/Vulpes/Inserir/Responsavel', cors(), bodyParserJson, async function (request, response, next) {
+    let contentType = request.headers['content-type'];
+    let dadosBody = request.body;
+
+    let resultResponsavel = await controllerResponsavel.setInserirNovoResponsavel(dadosBody, contentType);
+
+    response.status(resultResponsavel.status_code).json(resultResponsavel);
+})
+
 /////////////////////////////////// RESPONSAVEL ///////////////////////////////////
 
 
