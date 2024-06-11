@@ -212,11 +212,37 @@ const getNameProfessor = async function (nome) {
     }
 }
 
+const getProfessoresPorDisciplina = async function (id_disciplina) {
+
+    let professorJsonJSON = {}
+  
+    if (id_disciplina == '' || id_disciplina == undefined || isNaN(id_disciplina)) {
+
+      return message.ERROR_INVALID_ID
+    }
+  
+    let dadosProfessor = await professorDAO.selectByDisciplinaId(id_disciplina)
+  
+    if (dadosProfessor) {
+      if (dadosProfessor.length > 0) {
+        professorJsonJSON.professor = dadosProfessor
+        professorJsonJSON.quantidade = dadosProfessor.length
+        professorJsonJSON.status_code = 200
+        return professorJsonJSON
+      } else {
+        return message.ERROR_NOT_FOUND
+      }
+    } else {
+      return message.ERROR_INTERNAL_SERVER_DB
+    }
+  }
+
 module.exports = {
     setInserirNovoProfessor,
     setAtualizarProfessor,
     setExcluirProfessor,
     getListarProfessor,
     getBuscarProfessor,
-    getNameProfessor
+    getNameProfessor,
+    getProfessoresPorDisciplina
 }

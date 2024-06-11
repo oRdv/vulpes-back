@@ -6,6 +6,7 @@ const setInserirNovoAluno = async function (dadosAluno, contentType) {
 
     try {
 
+        let statusValidated = false
         let alunoJson = {}
 
         if (String(contentType).toLowerCase() !== 'application/json') {
@@ -37,10 +38,10 @@ const setInserirNovoAluno = async function (dadosAluno, contentType) {
 }
 
 const setAtualizarAluno = async function (id, dadosAluno, contentType) {
+    let alunoJson = {};
     try {
-        let alunoJson = {}
         if (String(contentType).toLowerCase() !== 'application/json') {
-            return message.ERROR_CONTENT_TYPE
+            return message.ERROR_CONTENT_TYPE;
         }
 
         if (!id || isNaN(id) ||
@@ -49,27 +50,24 @@ const setAtualizarAluno = async function (id, dadosAluno, contentType) {
             dadosAluno.numero_matricula === '' || dadosAluno.numero_matricula === undefined || dadosAluno.numero_matricula === null || isNaN(dadosAluno.numero_matricula) ||
             dadosAluno.cep === '' || dadosAluno.cep === undefined || dadosAluno.cep === null || isNaN(dadosAluno.cep)
         ) {
-            return message.ERROR_REQUIRED_FIELDS
+            return message.ERROR_REQUIRED_FIELDS;
         }
 
-        dadosAluno.id = id
-        let novoAluno = await alunosDao.updateAluno(dadosAluno)
+        dadosAluno.id = id;
+        let novoAluno = await alunosDao.updateAluno(dadosAluno);
 
         if (novoAluno) {
+            alunoJson.status = message.SUCCESSED_UPDATED_ITEM;
+            alunoJson.status_code = message.SUCCESSED_UPDATED_ITEM.status_code;
+            alunoJson.message = message.SUCCESSED_UPDATED_ITEM.message;
+            alunoJson.aluno = dadosAluno;
 
-            alunoJson.status = message.SUCCESSED_UPDATED_ITEM
-            alunoJson.status_code = message.SUCCESSED_UPDATED_ITEM.status_code
-            alunoJson.message = message.SUCCESSED_UPDATED_ITEM.message
-            alunoJson.aluno = dadosAluno
-            alunoJson.id = dadosAluno.id
-
-            return alunoJson
-            
+            return alunoJson;
         } else {
-            return message.ERROR_INTERNAL_SERVER_DB; 
+            return message.ERROR_INTERNAL_SERVER_DB; // Erro interno do servidor
         }
     } catch (error) {
-        return message.ERROR_INTERNAL_SERVER; 
+        return message.ERROR_INTERNAL_SERVER; // Erro interno do servidor
     }
 }
 
@@ -217,6 +215,54 @@ const getAlunoResponse = async function (id) {
     }
 };
 
+const getAlunosPorResponsavel = async function (id_responsavel) {
+    let alunosJSON = {}
+  
+    if (id_responsavel == '' || id_responsavel == undefined || isNaN(id_responsavel)) {
+      return message.ERROR_INVALID_ID
+    }
+  
+    let dadosAlunos = await alunosDao.selectByResponsavelId(id_responsavel)
+  
+    if (dadosAlunos) {
+      if (dadosAlunos.length > 0) {
+        alunosJSON.aluno = dadosAlunos
+        alunosJSON.quantidade = dadosAlunos.length
+        alunosJSON.status_code = 200
+        return alunosJSON
+      } else {
+        return message.ERROR_NOT_FOUND
+      }
+    } else {
+      return message.ERROR_INTERNAL_SERVER_DB
+    }
+  }
+
+  const getAlunosPorTurma = async function (id_turma) {
+
+    let alunosJSON = {}
+  
+    if (id_turma == '' || id_turma == undefined || isNaN(id_turma)) {
+      return message.ERROR_INVALID_ID
+    }
+  
+    let dadosAlunos = await alunosDao.selectByTurmaId(id_turma)
+  
+    if (dadosAlunos) {
+      if (dadosAlunos.length > 0) {
+        alunosJSON.aluno = dadosAlunos
+        alunosJSON.quantidade = dadosAlunos.length
+        alunosJSON.status_code = 200
+        return alunosJSON
+      } else {
+        return message.ERROR_NOT_FOUND
+      }
+    } else {
+      return message.ERROR_INTERNAL_SERVER_DB
+    }
+  }
+
+
 module.exports = {
     setInserirNovoAluno,
     setAtualizarAluno,
@@ -224,5 +270,7 @@ module.exports = {
     getListarAluno,
     getBuscarAluno,
     getNameAluno,
-    getAlunoResponse
+    getAlunoResponse,
+    getAlunosPorResponsavel,
+    getAlunosPorTurma
 }

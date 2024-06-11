@@ -17,15 +17,15 @@ const setInserirNovaNota = async function (dadosNota, contentType) {
                 dadosNota.data_lancamento == '' || dadosNota.data_lancamento == null || dadosNota.data_lancamento == undefined
 
             ) {
-                
+
                 return message.ERROR_REQUIRED_FIELDS
-                
+
             } else {
 
 
                 statusValidated = true
             }
-            
+
             if (statusValidated) {
 
                 let novonotaJson = await notaDAO.insertNovaNota(dadosNota)
@@ -183,12 +183,40 @@ const getBuscarNota = async function (id) {
     }
 }
 
+const getNotasPorAlunoseDisciplinas = async function (id_aluno, id_disciplina) {
+
+    let notasJSON = {}
+
+    if (id_aluno == '' || id_aluno == undefined || isNaN(id_aluno) || id_disciplina == '' || id_disciplina == undefined || isNaN(id_disciplina)) {
+
+        return message.ERROR_INVALID_ID
+    }
+
+    let dadosNotas = await notaDAO.selectByAlunoeDisciplinaId(id_aluno, id_disciplina)
+
+    if (dadosNotas) {
+        if (dadosNotas.length > 0) {
+            notasJSON.nota = dadosNotas
+            notasJSON.quantidade = dadosNotas.length
+            notasJSON.status_code = 200
+            return notasJSON
+        } else {
+            return message.ERROR_NOT_FOUND
+        }
+    } else {
+        return message.ERROR_INTERNAL_SERVER_DB
+    }
+}
+
+
+
 
 module.exports = {
     setInserirNovaNota,
     setAtualizarAviso,
     setExcluirNota,
     getListarNota,
-    getBuscarNota
+    getBuscarNota,
+    getNotasPorAlunoseDisciplinas
 
 }

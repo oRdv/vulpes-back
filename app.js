@@ -6,7 +6,7 @@ const { request } = require('http')
 
 const app = express()
 
-app.use((request, response, next ) => {
+app.use((request, response, next) => {
     response.header('Access-Control-Allow-Origin', '*')
     response.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
 
@@ -35,40 +35,40 @@ const controllerFormacao = require('./controller/controller_formacao.js')
 /////////////////////////////////// ALUNO ///////////////////////////////////
 
 
-app.get('/v1/Vulpes/Alunos', cors(), async function(request, response, next){
+app.get('/v1/Vulpes/Alunos', cors(), async function (request, response, next) {
     let dadosAvisoss = await controllerAlunos.getListarAluno()
-    
 
-    if(dadosAvisoss) {
+
+    if (dadosAvisoss) {
 
         response.json(dadosAvisoss)
         response.status(200)
 
     } else {
-        response.json({message: 'Nenhum registro encontrado'})
+        response.json({ message: 'Nenhum registro encontrado' })
         response.status(200)
     }
 })
 
 
-app.get('/v1/Vulpes/Alunos/:id', cors(), async function(request, response, next){
+app.get('/v1/Vulpes/Alunos/:id', cors(), async function (request, response, next) {
     //Recebe o id encaminhado pela requisição 
-   let idAviso = request.params.id
-   let dadosAvisos = await controllerAlunos.getBuscarAluno(idAviso)
+    let idAviso = request.params.id
+    let dadosAvisos = await controllerAlunos.getBuscarAluno(idAviso)
 
-   response.status(dadosAvisos.status_code)
-   response.json(dadosAvisos)
+    response.status(dadosAvisos.status_code)
+    response.json(dadosAvisos)
 
 })
 
 
-app.get('/v1/Vulpes/Alunos/nome', cors(), async function(request, response, next){
+app.get('/v1/Vulpes/Alunos/nome', cors(), async function (request, response, next) {
     //Recebe o id encaminhado pela requisição 
-   let nome = request.query.nome
-   let dadosAvisos = await controllerAlunos.getNameAluno(nome)
+    let nome = request.query.nome
+    let dadosAvisos = await controllerAlunos.getNameAluno(nome)
 
-   response.status(dadosAvisos.status_code)
-   response.json(dadosAvisos)
+    response.status(dadosAvisos.status_code)
+    response.json(dadosAvisos)
 
 })
 
@@ -84,7 +84,7 @@ app.get('/v1/Vulpes/Alunos/Responsavel/:id', async (req, res) => {
 });
 
 
-app.delete('/v1/Vulpes/Alunos/:id', cors(), async function(request, response){
+app.delete('/v1/Vulpes/Alunos/:id', cors(), async function (request, response) {
     let idAviso = request.params.id
     let dadosAvisos = await controllerAlunos.setExcluirAluno(idAviso)
 
@@ -102,7 +102,7 @@ app.put('/v1/Vulpes/Atualizar/Alunos/:id', cors(), bodyParserJson, async functio
     response.json(dadosAvisos)
 })
 
-app.post('/v1/Vulpes/Inserir/Alunos', cors(), bodyParserJson, async function(request, response, next){
+app.post('/v1/Vulpes/Inserir/Alunos', cors(), bodyParserJson, async function (request, response, next) {
     let contentType = request.headers['content-type'];
     let dadosBody = request.body;
 
@@ -111,44 +111,67 @@ app.post('/v1/Vulpes/Inserir/Alunos', cors(), bodyParserJson, async function(req
     response.status(resultAlunos.status_code).json(resultAlunos);
 });
 
+
+app.get('/v1/Vulpes/Alunos/Responsavel/:id', cors(), async function (request, response, next) {
+    let idResponsavel = request.params.id
+    let dadosAluno = await controllerAlunos.getAlunosPorResponsavel(idResponsavel);
+
+    response.status(dadosAluno.status_code)
+    response.json(dadosAluno)
+
+});
+
+
+app.get('/v1/Vulpes/Alunos/Turma/:id', cors(), async function (request, response, next) {
+    let idTurma = request.params.id
+    let dadosAluno = await controllerAlunos.getAlunosPorTurma(idTurma);
+
+    response.status(dadosAluno.status_code)
+    response.json(dadosAluno)
+
+});
+
+
+
+
 /////////////////////////////////// PROFESSOR ///////////////////////////////////
 
-app.get('/v1/Vulpes/Professor', cors(), async function(request, response, next){
+app.get('/v1/Vulpes/Professor', cors(), async function (request, response, next) {
     let dadosProfessor = await controllerProfessor.getListarProfessor()
-    
 
-    if(dadosProfessor) {
+
+    if (dadosProfessor) {
 
         response.json(dadosProfessor)
         response.status(200)
 
     } else {
-        response.json({message: 'Nenhum registro encontrado'})
+        response.json({ message: 'Nenhum registro encontrado' })
         response.status(200)
     }
 })
 
-app.get('/v1/Vulpes/Professor/:id', cors(), async function(request, response, next){
+app.get('/v1/Vulpes/Professor/:id', cors(), async function (request, response, next) {
     //Recebe o id encaminhado pela requisição 
-   let idProfessor = request.params.id
-   let dadosProfessor = await controllerProfessor.getBuscarProfessor(idProfessor)
+    let idProfessor = request.params.id
+    let dadosProfessor = await controllerProfessor.getBuscarProfessor(idProfessor)
 
-   response.status(dadosProfessor.status_code)
-   response.json(dadosProfessor)
+    response.status(dadosProfessor.status_code)
+    response.json(dadosProfessor)
 
 })
 
-app.get('/v1/Vulpes/Professor/nome', cors(), async function(request, response, next){
+app.get('/v1/Vulpes/Professor/nome', cors(), async function (request, response, next) {
     //Recebe o id encaminhado pela requisição 
-   let nome = request.query.nome
-   let dadosProfessor = await controllerProfessor.getNameProfessor(nome)
+    let nome = request.query.nome
+    let dadosProfessor = await controllerProfessor.getNameProfessor(nome)
 
-   response.status(dadosProfessor.status_code)
-   response.json(dadosProfessor)
+    response.status(dadosProfessor.status_code)
+    response.json(dadosProfessor)
 
 })
 
-app.delete('/v1/Vulpes/Professor/:id', cors(), async function(request, response){
+app.delete('/v1/Vulpes/Professor/:id', cors(), async function (request, response) {
     let idProfessor = request.params.id
     let dadosProfessor = await controllerProfessor.setExcluirProfessor(idProfessor)
 
@@ -158,7 +181,7 @@ app.delete('/v1/Vulpes/Professor/:id', cors(), async function(request, response)
 
 
 
-app.post('/v1/Vulpes/Inserir/Professor', cors(), bodyParserJson, async function(request, response, next){
+app.post('/v1/Vulpes/Inserir/Professor', cors(), bodyParserJson, async function (request, response, next) {
     let contentType = request.headers['content-type'];
     let dadosBody = request.body;
 
@@ -177,38 +200,46 @@ app.put('/v1/Vulpes/atualiza/Professor/:id', cors(), bodyParserJson, async funct
     response.json(dadosProfessor)
 })
 
+app.get('/v1/Vulpes/Professor/Disciplina/:id', cors(), async function (request, response, next) {
+    let idDisciplina = request.params.id
+    let dadosProfessor = await controllerProfessor.getProfessoresPorDisciplina(idDisciplina);
+
+    response.status(dadosProfessor.status_code)
+    response.json(dadosProfessor)
+
+});
 
 
 
 /////////////////////////////////// FREQUENCIA ///////////////////////////////////
 
-app.get('/v1/Vulpes/Frequencia', cors(), async function(request, response, next){
+app.get('/v1/Vulpes/Frequencia', cors(), async function (request, response, next) {
     let dadosFrequencia = await controllerFrequencia.getListarFrequencia()
-    
 
-    if(dadosFrequencia) {
+
+    if (dadosFrequencia) {
 
         response.json(dadosFrequencia)
         response.status(200)
 
     } else {
-        response.json({message: 'Nenhum registro encontrado'})
+        response.json({ message: 'Nenhum registro encontrado' })
         response.status(200)
     }
 })
 
-app.get('/v1/Vulpes/Frequencia/:id', cors(), async function(request, response, next){
+app.get('/v1/Vulpes/Frequencia/:id', cors(), async function (request, response, next) {
     //Recebe o id encaminhado pela requisição 
-   let idFrequencia = request.params.id
-   let dadosFrequencia = await controllerFrequencia.getBuscarFrequencia(idFrequencia)
+    let idFrequencia = request.params.id
+    let dadosFrequencia = await controllerFrequencia.getBuscarFrequencia(idFrequencia)
 
-   response.status(dadosFrequencia.status_code)
-   response.json(dadosFrequencia)
+    response.status(dadosFrequencia.status_code)
+    response.json(dadosFrequencia)
 
 })
 
 
-app.delete('/v1/Vulpes/Frequencia/:id', cors(), async function(request, response){
+app.delete('/v1/Vulpes/Frequencia/:id', cors(), async function (request, response) {
     let idFrequencia = request.params.id
     let dadosFrequencia = await controllerFrequencia.setExcluirFrequencia(idFrequencia)
 
@@ -216,55 +247,57 @@ app.delete('/v1/Vulpes/Frequencia/:id', cors(), async function(request, response
     response.json(dadosFrequencia)
 })
 
-app.post('/v1/Vulpes/Inserir/Frequencia', cors(), bodyParserJson, async function(request, response, next){
+app.post('/v1/Vulpes/Inserir/Frequencia', cors(), bodyParserJson, async function (request, response, next) {
     let contentType = request.headers['content-type'];
     let dadosBody = request.body;
 
-    let resultFrequencia= await controllerFrequencia.setInserirNovaFrequencia(dadosBody, contentType);
+    let resultFrequencia = await controllerFrequencia.setInserirNovaFrequencia(dadosBody, contentType);
 
     response.status(resultFrequencia.status_code).json(resultFrequencia);
 });
 
 
 
+
+
 /////////////////////////////////// DISCIPLINA ///////////////////////////////////
 
-app.get('/v1/Vulpes/Disciplina', cors(), async function(request, response, next){
+app.get('/v1/Vulpes/Disciplina', cors(), async function (request, response, next) {
     let dadosDisciplina = await controllerDisciplina.getListarDisciplina()
-    
 
-    if(dadosDisciplina) {
+
+    if (dadosDisciplina) {
 
         response.json(dadosDisciplina)
         response.status(200)
 
     } else {
-        response.json({message: 'Nenhum registro encontrado'})
+        response.json({ message: 'Nenhum registro encontrado' })
         response.status(200)
     }
 })
 
-app.get('/v1/Vulpes/Disciplina/:id', cors(), async function(request, response, next){
+app.get('/v1/Vulpes/Disciplina/:id', cors(), async function (request, response, next) {
     //Recebe o id encaminhado pela requisição 
-   let idDisciplina = request.params.id
-   let dadosDisciplina = await controllerDisciplina.getBuscarDisciplina(idDisciplina)
+    let idDisciplina = request.params.id
+    let dadosDisciplina = await controllerDisciplina.getBuscarDisciplina(idDisciplina)
 
-   response.status(dadosDisciplina.status_code)
-   response.json(dadosDisciplina)
+    response.status(dadosDisciplina.status_code)
+    response.json(dadosDisciplina)
 
 })
 
-app.post('/v1/Vulpes/Inserir/Disciplina', cors(), bodyParserJson, async function(request, response, next){
+app.post('/v1/Vulpes/Inserir/Disciplina', cors(), bodyParserJson, async function (request, response, next) {
     let contentType = request.headers['content-type'];
     let dadosBody = request.body;
 
-    let resultDisciplina= await controllerDisciplina.setInserirNovaDisciplina(dadosBody, contentType);
+    let resultDisciplina = await controllerDisciplina.setInserirNovaDisciplina(dadosBody, contentType);
 
     response.status(resultDisciplina.status_code).json(resultDisciplina);
 });
 
 
-app.delete('/v1/Vulpes/Disciplina/:id', cors(), async function(request, response){
+app.delete('/v1/Vulpes/Disciplina/:id', cors(), async function (request, response) {
     let idDisciplina = request.params.id
     let dadosDisciplina = await controllerDisciplina.setExcluirDisciplina(idDisciplina)
 
@@ -272,7 +305,7 @@ app.delete('/v1/Vulpes/Disciplina/:id', cors(), async function(request, response
     response.json(dadosFrequencia)
 })
 
-app.post('/v1/Vulpes/Inserir/Disciplina', cors(), bodyParserJson, async function(request, response, next){
+app.post('/v1/Vulpes/Inserir/Disciplina', cors(), bodyParserJson, async function (request, response, next) {
     let contentType = request.headers['content-type'];
     let dadosBody = request.body;
 
@@ -285,42 +318,42 @@ app.post('/v1/Vulpes/Inserir/Disciplina', cors(), bodyParserJson, async function
 
 /////////////////////////////////// GESTAO ///////////////////////////////////
 
-app.get('/v1/Vulpes/Gestao', cors(), async function(request, response, next){
+app.get('/v1/Vulpes/Gestao', cors(), async function (request, response, next) {
     let dadosGestao = await controllerGestao.getListarGestao()
-    
 
-    if(dadosGestao) {
+
+    if (dadosGestao) {
 
         response.json(dadosGestao)
         response.status(200)
 
     } else {
-        response.json({message: 'Nenhum registro encontrado'})
+        response.json({ message: 'Nenhum registro encontrado' })
         response.status(200)
     }
 })
 
-app.get('/v1/Vulpes/Gestao/:id', cors(), async function(request, response, next){
+app.get('/v1/Vulpes/Gestao/:id', cors(), async function (request, response, next) {
     //Recebe o id encaminhado pela requisição 
-   let idGestao = request.params.id
-   let dadosGestao = await controllerGestao.getBuscarGestao(idGestao)
+    let idGestao = request.params.id
+    let dadosGestao = await controllerGestao.getBuscarGestao(idGestao)
 
-   response.status(dadosGestao.status_code)
-   response.json(dadosGestao)
+    response.status(dadosGestao.status_code)
+    response.json(dadosGestao)
 
 })
 
-app.get('/v1/Vulpes/Gestao/nome', cors(), async function(request, response, next){
+app.get('/v1/Vulpes/Gestao/nome', cors(), async function (request, response, next) {
     //Recebe o id encaminhado pela requisição 
-   let nome = request.query.nome
-   let dadosGestao = await controllerGestao.getNameGestao(nome)
+    let nome = request.query.nome
+    let dadosGestao = await controllerGestao.getNameGestao(nome)
 
-   response.status(dadosGestao.status_code)
-   response.json(dadosGestao)
+    response.status(dadosGestao.status_code)
+    response.json(dadosGestao)
 
 })
 
-app.delete('/v1/Vulpes/dadosGestao/:id', cors(), async function(request, response){
+app.delete('/v1/Vulpes/dadosGestao/:id', cors(), async function (request, response) {
     let idGestao = request.params.id
     let dadosGestao = await controllerGestao.setExcluirGestao(idGestao)
 
@@ -331,45 +364,45 @@ app.delete('/v1/Vulpes/dadosGestao/:id', cors(), async function(request, respons
 /////////////////////////////////// RESPONSAVEL ///////////////////////////////////
 
 
-app.get('/v1/Vulpes/Responsavel', cors(), async function(request, response, next){
+app.get('/v1/Vulpes/Responsavel', cors(), async function (request, response, next) {
     let dadosResponsavel = await controllerResponsavel.getListarResponsavel()
-    
 
-    if(dadosResponsavel) {
+
+    if (dadosResponsavel) {
 
         response.json(dadosResponsavel)
         response.status(200)
 
     } else {
-        response.json({message: 'Nenhum registro encontrado'})
+        response.json({ message: 'Nenhum registro encontrado' })
         response.status(200)
     }
 })
 
 
-app.get('/v1/Vulpes/Responsavel/:id', cors(), async function(request, response, next){
+app.get('/v1/Vulpes/Responsavel/:id', cors(), async function (request, response, next) {
     //Recebe o id encaminhado pela requisição 
-   let idResponsavel = request.params.id
-   let dadosResponsavel = await controllerResponsavel.getBuscarResponsavel(idResponsavel)
+    let idResponsavel = request.params.id
+    let dadosResponsavel = await controllerResponsavel.getBuscarResponsavel(idResponsavel)
 
-   response.status(dadosResponsavel.status_code)
-   response.json(dadosResponsavel)
+    response.status(dadosResponsavel.status_code)
+    response.json(dadosResponsavel)
 
 })
 
 
-app.get('/v1/Vulpes/Responsavel/nome', cors(), async function(request, response, next){
+app.get('/v1/Vulpes/Responsavel/nome', cors(), async function (request, response, next) {
     //Recebe o id encaminhado pela requisição 
-   let nome = request.query.nome
-   let dadosResponsavel = await controllerResponsavel.getNameResponsavel(nome)
+    let nome = request.query.nome
+    let dadosResponsavel = await controllerResponsavel.getNameResponsavel(nome)
 
-   response.status(dadosResponsavel.status_code)
-   response.json(dadosResponsavel)
+    response.status(dadosResponsavel.status_code)
+    response.json(dadosResponsavel)
 
 })
 
 
-app.delete('/v1/Vulpes/Responsavel/:id', cors(), async function(request, response){
+app.delete('/v1/Vulpes/Responsavel/:id', cors(), async function (request, response) {
     let idResponsavel = request.params.id
     let dadosResponsavel = await controllerResponsavel.setExcluirResponsavel(idResponsavel)
 
@@ -377,7 +410,7 @@ app.delete('/v1/Vulpes/Responsavel/:id', cors(), async function(request, respons
     response.json(dadosResponsavel)
 })
 
-app.post('/v1/Vulpes/Inserir/Responsavel', cors(), bodyParserJson, async function(request, response, next){
+app.post('/v1/Vulpes/Inserir/Responsavel', cors(), bodyParserJson, async function (request, response, next) {
     let contentType = request.headers['content-type'];
     let dadosBody = request.body;
 
@@ -389,45 +422,45 @@ app.post('/v1/Vulpes/Inserir/Responsavel', cors(), bodyParserJson, async functio
 /////////////////////////////////// AVISO ///////////////////////////////////
 
 
-app.get('/v1/Vulpes/Aviso', cors(), async function(request, response, next){
+app.get('/v1/Vulpes/Aviso', cors(), async function (request, response, next) {
     let dadosAviso = await controllerAviso.getListarAviso()
-    
 
-    if(dadosAviso) {
+
+    if (dadosAviso) {
 
         response.json(dadosAviso)
         response.status(200)
 
     } else {
-        response.json({message: 'Nenhum registro encontrado'})
+        response.json({ message: 'Nenhum registro encontrado' })
         response.status(200)
     }
 })
 
 
-app.get('/v1/Vulpes/Aviso/:id', cors(), async function(request, response, next){
+app.get('/v1/Vulpes/Aviso/:id', cors(), async function (request, response, next) {
     //Recebe o id encaminhado pela requisição 
-   let idAviso = request.params.id
-   let dadosAviso = await controllerAviso.getBuscarAviso(idAviso)
+    let idAviso = request.params.id
+    let dadosAviso = await controllerAviso.getBuscarAviso(idAviso)
 
-   response.status(dadosAviso.status_code)
-   response.json(dadosAviso)
+    response.status(dadosAviso.status_code)
+    response.json(dadosAviso)
 
 })
 
 
-app.get('/v1/Vulpes/Aviso/nome', cors(), async function(request, response, next){
+app.get('/v1/Vulpes/Aviso/nome', cors(), async function (request, response, next) {
     //Recebe o id encaminhado pela requisição 
-   let titulo = request.query.titulo
-   let dadosAviso = await controllerAviso.getNameAviso(titulo)
+    let titulo = request.query.titulo
+    let dadosAviso = await controllerAviso.getNameAviso(titulo)
 
-   response.status(dadosAviso.status_code)
-   response.json(dadosAviso)
+    response.status(dadosAviso.status_code)
+    response.json(dadosAviso)
 
 })
 
 
-app.delete('/v1/Vulpes/Aviso/:id', cors(), async function(request, response){
+app.delete('/v1/Vulpes/Aviso/:id', cors(), async function (request, response) {
     let idAviso = request.params.id
     let dadosAviso = await controllerAviso.setExcluirAviso(idAviso)
 
@@ -435,7 +468,7 @@ app.delete('/v1/Vulpes/Aviso/:id', cors(), async function(request, response){
     response.json(dadosAviso)
 })
 
-app.post('/v1/Vulpes/Inserir/Aviso', cors(), bodyParserJson, async function(request, response, next){
+app.post('/v1/Vulpes/Inserir/Aviso', cors(), bodyParserJson, async function (request, response, next) {
     let contentType = request.headers['content-type'];
     let dadosBody = request.body;
 
@@ -458,34 +491,34 @@ app.put('/v1/Vulpes/Atualizar/Aviso/:id', cors(), bodyParserJson, async function
 /////////////////////////////////// NOTA ///////////////////////////////////
 
 
-app.get('/v1/Vulpes/Nota', cors(), async function(request, response, next){
+app.get('/v1/Vulpes/Nota', cors(), async function (request, response, next) {
     let dadosNota = await controllerNota.getListarNota()
-    
 
-    if(dadosNota) {
+
+    if (dadosNota) {
 
         response.json(dadosNota)
         response.status(200)
 
     } else {
-        response.json({message: 'Nenhum registro encontrado'})
+        response.json({ message: 'Nenhum registro encontrado' })
         response.status(200)
     }
 })
 
 
-app.get('/v1/Vulpes/Nota/:id', cors(), async function(request, response, next){
+app.get('/v1/Vulpes/Nota/:id', cors(), async function (request, response, next) {
     //Recebe o id encaminhado pela requisição 
-   let idNota = request.params.id
-   let dadosNota = await controllerNota.getBuscarNota(idNota)
+    let idNota = request.params.id
+    let dadosNota = await controllerNota.getBuscarNota(idNota)
 
 
-   response.json(dadosNota)
+    response.json(dadosNota)
 
 })
 
 
-app.delete('/v1/Vulpes/Nota/:id', cors(), async function(request, response){
+app.delete('/v1/Vulpes/Nota/:id', cors(), async function (request, response) {
     let idNota = request.params.id
     let dadosNota = await controllerNota.setExcluirNota(idNota)
 
@@ -493,7 +526,7 @@ app.delete('/v1/Vulpes/Nota/:id', cors(), async function(request, response){
     response.json(dadosNota)
 })
 
-app.post('/v1/Vulpes/Inserir/Nota', cors(), bodyParserJson, async function(request, response, next){
+app.post('/v1/Vulpes/Inserir/Nota', cors(), bodyParserJson, async function (request, response, next) {
     let contentType = request.headers['content-type'];
     let dadosBody = request.body;
 
@@ -506,45 +539,45 @@ app.post('/v1/Vulpes/Inserir/Nota', cors(), bodyParserJson, async function(reque
 /////////////////////////////////// MODALIDADE ///////////////////////////////////
 
 
-app.get('/v1/Vulpes/Modalidade', cors(), async function(request, response, next){
+app.get('/v1/Vulpes/Modalidade', cors(), async function (request, response, next) {
     let dadosModalidade = await controllerModalidade.getListarModalidade()
-    
 
-    if(dadosModalidade) {
+
+    if (dadosModalidade) {
 
         response.json(dadosModalidade)
         response.status(200)
 
     } else {
-        response.json({message: 'Nenhum registro encontrado'})
+        response.json({ message: 'Nenhum registro encontrado' })
         response.status(200)
     }
 })
 
 
-app.get('/v1/Vulpes/Modalidade/:id', cors(), async function(request, response, next){
+app.get('/v1/Vulpes/Modalidade/:id', cors(), async function (request, response, next) {
     //Recebe o id encaminhado pela requisição 
-   let idModalidade = request.params.id
-   let dadosModalidade = await controllerModalidade.getBuscarModalidade(idModalidade)
+    let idModalidade = request.params.id
+    let dadosModalidade = await controllerModalidade.getBuscarModalidade(idModalidade)
 
-   response.status(dadosModalidade.status_code)
-   response.json(dadosModalidade)
+    response.status(dadosModalidade.status_code)
+    response.json(dadosModalidade)
 
 })
 
 
-app.get('/v1/Vulpes/Modalidade/nome', cors(), async function(request, response, next){
+app.get('/v1/Vulpes/Modalidade/nome', cors(), async function (request, response, next) {
     //Recebe o id encaminhado pela requisição 
-   let nome = request.query.nome
-   let dadosModalidade = await controllerModalidade.getNameModalidade(nome)
+    let nome = request.query.nome
+    let dadosModalidade = await controllerModalidade.getNameModalidade(nome)
 
-   response.status(dadosModalidade.status_code)
-   response.json(dadosModalidade)
+    response.status(dadosModalidade.status_code)
+    response.json(dadosModalidade)
 
 })
 
 
-app.delete('/v1/Vulpes/Modalidade/:id', cors(), async function(request, response){
+app.delete('/v1/Vulpes/Modalidade/:id', cors(), async function (request, response) {
     let idModalidade = request.params.id
     let dadosModalidade = await controllerModalidade.setExcluirModalidade(idModalidade)
 
@@ -552,7 +585,7 @@ app.delete('/v1/Vulpes/Modalidade/:id', cors(), async function(request, response
     response.json(dadosModalidade)
 })
 
-app.post('/v1/Vulpes/Inserir/Modalidade', cors(), bodyParserJson, async function(request, response, next){
+app.post('/v1/Vulpes/Inserir/Modalidade', cors(), bodyParserJson, async function (request, response, next) {
     let contentType = request.headers['content-type'];
     let dadosBody = request.body;
 
@@ -561,50 +594,57 @@ app.post('/v1/Vulpes/Inserir/Modalidade', cors(), bodyParserJson, async function
     response.status(resultModalidade.status_code).json(resultModalidade);
 });
 
+app.get('/v1/Vulpes/Modalidade/Turma/:id', cors(), async function (request, response, next) {
+    let idTurma = request.params.id
+    let dadosModalidade = await controllerModalidade.getModalidadesPorTurma(idTurma);
 
+    response.status(dadosModalidade.status_code)
+    response.json(dadosModalidade)
+
+});
 
 /////////////////////////////////// COMUNICADO ///////////////////////////////////
 
 
-app.get('/v1/Vulpes/Comunicado', cors(), async function(request, response, next){
+app.get('/v1/Vulpes/Comunicado', cors(), async function (request, response, next) {
     let dadosComunicado = await controllerComunicado.getListarComunicado()
-    
 
-    if(dadosComunicado) {
+
+    if (dadosComunicado) {
 
         response.json(dadosComunicado)
         response.status(200)
 
     } else {
-        response.json({message: 'Nenhum registro encontrado'})
+        response.json({ message: 'Nenhum registro encontrado' })
         response.status(200)
     }
 })
 
 
-app.get('/v1/Vulpes/Comunicado/:id', cors(), async function(request, response, next){
+app.get('/v1/Vulpes/Comunicado/:id', cors(), async function (request, response, next) {
     //Recebe o id encaminhado pela requisição 
-   let idComunicado = request.params.id
-   let dadosComunicado = await controllerComunicado.getBuscarComunicado(idComunicado)
+    let idComunicado = request.params.id
+    let dadosComunicado = await controllerComunicado.getBuscarComunicado(idComunicado)
 
-   response.status(dadosComunicado.status_code)
-   response.json(dadosComunicado)
+    response.status(dadosComunicado.status_code)
+    response.json(dadosComunicado)
 
 })
 
 
-app.get('/v1/Vulpes/Comunicado/titulo', cors(), async function(request, response, next){
+app.get('/v1/Vulpes/Comunicado/titulo', cors(), async function (request, response, next) {
     //Recebe o id encaminhado pela requisição 
-   let titulo = request.query.titulo
-   let dadosComunicado = await controllerComunicado.getNameComunicado(titulo)
+    let titulo = request.query.titulo
+    let dadosComunicado = await controllerComunicado.getNameComunicado(titulo)
 
-   response.status(dadosComunicado.status_code)
-   response.json(dadosComunicado)
+    response.status(dadosComunicado.status_code)
+    response.json(dadosComunicado)
 
 })
 
 
-app.delete('/v1/Vulpes/Comunicado/:id', cors(), async function(request, response){
+app.delete('/v1/Vulpes/Comunicado/:id', cors(), async function (request, response) {
     let idComunicado = request.params.id
     let dadosComunicado = await controllerComunicado.setExcluirComunicado(idComunicado)
 
@@ -615,44 +655,44 @@ app.delete('/v1/Vulpes/Comunicado/:id', cors(), async function(request, response
 /////////////////////////////////// TURMA ///////////////////////////////////
 
 
-app.get('/v1/Vulpes/Turma', cors(), async function(request, response, next){
+app.get('/v1/Vulpes/Turma', cors(), async function (request, response, next) {
     let dadosTurma = await controllerTurma.getListarTurma()
 
-    if(dadosTurma) {
+    if (dadosTurma) {
 
         response.json(dadosTurma)
         response.status(200)
 
     } else {
-        response.json({message: 'Nenhum registro encontrado'})
+        response.json({ message: 'Nenhum registro encontrado' })
         response.status(200)
     }
 })
 
 
-app.get('/v1/Vulpes/Turma/:id', cors(), async function(request, response, next){
+app.get('/v1/Vulpes/Turma/:id', cors(), async function (request, response, next) {
     //Recebe o id encaminhado pela requisição 
-   let idFormacao = request.params.id
-   let dadosTurma = await controllerTurma.getBuscarTurma(idFormacao)
+    let idFormacao = request.params.id
+    let dadosTurma = await controllerTurma.getBuscarTurma(idFormacao)
 
-   response.status(dadosTurma.status_code)
-   response.json(dadosTurma)
+    response.status(dadosTurma.status_code)
+    response.json(dadosTurma)
 
 })
 
 
-app.get('/v1/Vulpes/Turma/nome', cors(), async function(request, response, next){
+app.get('/v1/Vulpes/Turma/nome', cors(), async function (request, response, next) {
     //Recebe o id encaminhado pela requisição 
-   let nome = request.query.nome
-   let dadosTurma = await controllerTurma.getNameTurma(nome)
+    let nome = request.query.nome
+    let dadosTurma = await controllerTurma.getNameTurma(nome)
 
-   response.status(dadosTurma.status_code)
-   response.json(dadosTurma)
+    response.status(dadosTurma.status_code)
+    response.json(dadosTurma)
 
 })
 
 
-app.delete('/v1/Vulpes/Turma/:id', cors(), async function(request, response){
+app.delete('/v1/Vulpes/Turma/:id', cors(), async function (request, response) {
     let idFormacao = request.params.id
     let dadosTurma = await controllerComunicado.setExcluirComunicado(idFormacao)
 
@@ -660,7 +700,7 @@ app.delete('/v1/Vulpes/Turma/:id', cors(), async function(request, response){
     response.json(dadosTurma)
 })
 
-app.post('/v1/Vulpes/Inserir/Turma', cors(), bodyParserJson, async function(request, response, next){
+app.post('/v1/Vulpes/Inserir/Turma', cors(), bodyParserJson, async function (request, response, next) {
     let contentType = request.headers['content-type'];
     let dadosBody = request.body;
 
@@ -673,44 +713,44 @@ app.post('/v1/Vulpes/Inserir/Turma', cors(), bodyParserJson, async function(requ
 /////////////////////////////////// FORMAÇÃO ///////////////////////////////////
 
 
-app.get('/v1/Vulpes/Formacao', cors(), async function(request, response, next){
+app.get('/v1/Vulpes/Formacao', cors(), async function (request, response, next) {
     let dadosFormacao = await controllerFormacao.getListarFormacao()
 
-    if(dadosFormacao) {
+    if (dadosFormacao) {
 
         response.json(dadosFormacao)
         response.status(200)
 
     } else {
-        response.json({message: 'Nenhum registro encontrado'})
+        response.json({ message: 'Nenhum registro encontrado' })
         response.status(200)
     }
 })
 
 
-app.get('/v1/Vulpes/Formacao/:id', cors(), async function(request, response, next){
+app.get('/v1/Vulpes/Formacao/:id', cors(), async function (request, response, next) {
     //Recebe o id encaminhado pela requisição 
-   let idFormacao = request.params.id
-   let dadosFormacao = await controllerFormacao.getBuscarFormacao(idFormacao)
+    let idFormacao = request.params.id
+    let dadosFormacao = await controllerFormacao.getBuscarFormacao(idFormacao)
 
-   response.status(dadosFormacao.status_code)
-   response.json(dadosFormacao)
+    response.status(dadosFormacao.status_code)
+    response.json(dadosFormacao)
 
 })
 
 
-app.get('/v1/Vulpes/Formacao/universidade', cors(), async function(request, response, next){
+app.get('/v1/Vulpes/Formacao/universidade', cors(), async function (request, response, next) {
     //Recebe o id encaminhado pela requisição 
-   let universidade = request.query.universidade
-   let dadosFormacao = await controllerFormacao.getNameUniversidade(universidade)
+    let universidade = request.query.universidade
+    let dadosFormacao = await controllerFormacao.getNameUniversidade(universidade)
 
-   response.status(dadosFormacao.status_code)
-   response.json(dadosFormacao)
+    response.status(dadosFormacao.status_code)
+    response.json(dadosFormacao)
 
 })
 
 
-app.delete('/v1/Vulpes/Formacao/:id', cors(), async function(request, response){
+app.delete('/v1/Vulpes/Formacao/:id', cors(), async function (request, response) {
     let idFormacao = request.params.id
     let dadosFormacao = await controllerFormacao.setExcluirFormacao(idFormacao)
 
@@ -718,7 +758,7 @@ app.delete('/v1/Vulpes/Formacao/:id', cors(), async function(request, response){
     response.json(dadosFormacao)
 })
 
-app.post('/v1/Vulpes/Inserir/Formacao', cors(), bodyParserJson, async function(request, response, next){
+app.post('/v1/Vulpes/Inserir/Formacao', cors(), bodyParserJson, async function (request, response, next) {
     let contentType = request.headers['content-type'];
     let dadosBody = request.body;
 
@@ -728,7 +768,18 @@ app.post('/v1/Vulpes/Inserir/Formacao', cors(), bodyParserJson, async function(r
 });
 
 
+////////////////////////// OUTROS //////////////////////////
 
-app.listen(8080, function(){
+app.get('/v1/Vulpes/Nota/Aluno/Disciplina/:idAluno/:idDisciplina', cors(), async function (request, response, next) {
+    let idAluno = request.params.idAluno;
+    let idDisciplina = request.params.idDisciplina;
+    let dadosNota = await controllerNota.getNotasPorAlunoseDisciplinas(idAluno, idDisciplina);
+
+    response.status(dadosNota.status_code);
+    response.json(dadosNota);
+});
+
+
+app.listen(8080, function () {
     console.log('A API está no ar e aguardando requisições')
 })

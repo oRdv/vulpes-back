@@ -207,6 +207,31 @@ const getNameModalidade = async function (nome) {
     }
 }
 
+
+const getModalidadesPorTurma = async function (id_turma) {
+
+    let modalidadesJSON = {}
+  
+    if (id_turma == '' || id_turma == undefined || isNaN(id_turma)) {
+      return message.ERROR_INVALID_ID
+    }
+  
+    let dadosModalidades = await modalidadeDAO.selectByTurmaId(id_turma)
+  
+    if (dadosModalidades) {
+      if (dadosModalidades.length > 0) {
+        modalidadesJSON.modalidade = dadosModalidades
+        modalidadesJSON.quantidade = dadosModalidades.length
+        modalidadesJSON.status_code = 200
+        return modalidadesJSON
+      } else {
+        return message.ERROR_NOT_FOUND
+      }
+    } else {
+      return message.ERROR_INTERNAL_SERVER_DB
+    }
+  }
+
 module.exports = {
     setInserirNovaModalidade,
     setAtualizarModalidade,

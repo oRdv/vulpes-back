@@ -118,6 +118,18 @@ const deleteModalidade = async function (id) {
     }
 }
 
+const selectByTurmaId = async function (id_turma) {
+    try {
+        let sql = `select * from tbl_modalidade inner join tbl_turma_modalidade on tbl_modalidade.id = tbl_turma_modalidade.id_modalidade where tbl_turma_modalidade.id_turma = ${id_turma};`;
+
+        let rsModalidade = await prisma.$queryRawUnsafe(sql)
+
+        return rsModalidade
+    } catch (error) {
+        return false
+    }
+}
+
 
 module.exports = {
     insertNovaModalidade,
@@ -125,6 +137,7 @@ module.exports = {
     deleteModalidade,
     selectAllModalidades,
     selectById,
-    selectByNameModalidade
+    selectByNameModalidade,
+    selectByTurmaId
 
 }

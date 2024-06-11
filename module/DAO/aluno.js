@@ -133,6 +133,30 @@ const selectResponsavelAluno = async function (id) {
     }
 }
 
+const selectByResponsavelId = async function (id_responsavel) {
+    try {
+        let sql = `select * from tbl_aluno inner join tbl_aluno_responsavel on tbl_aluno.id = tbl_aluno_responsavel.id_aluno where tbl_aluno_responsavel.id_responsavel = ${id_responsavel};`;
+
+        let rsAlunos = await prisma.$queryRawUnsafe(sql)
+
+        return rsAlunos
+    } catch (error) {
+        return false
+    }
+}
+
+const selectByTurmaId = async function (id_turma) {
+    try {
+        let sql = `select * from tbl_aluno inner join tbl_turma_aluno on tbl_aluno.id = tbl_turma_aluno.id_aluno where tbl_turma_aluno.id_turma = ${id_turma};`;
+
+        let rsAlunos = await prisma.$queryRawUnsafe(sql)
+
+        return rsAlunos
+    } catch (error) {
+        return false
+    }
+}
+
 
 module.exports = {
     insertNovoAluno,
@@ -141,6 +165,8 @@ module.exports = {
     selectAllAlunos,
     selectById,
     selectByNameAluno,
-    selectResponsavelAluno
+    selectResponsavelAluno,
+    selectByResponsavelId,
+    selectByTurmaId
 
 }
