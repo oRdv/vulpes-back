@@ -3,7 +3,7 @@ const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 
 
-const selectAllAlunos = async function() {
+const selectAllAlunos = async function () {
 
     try {
 
@@ -13,7 +13,7 @@ const selectAllAlunos = async function() {
 
         return rsAluno
 
-      } catch (error) {
+    } catch (error) {
         return false
     }
 }
@@ -28,7 +28,7 @@ const selectById = async function (id) {
         let rsAlunos = await prisma.$queryRawUnsafe(sql)
 
         return rsAlunos
-    
+
     } catch (error) {
 
         return false
@@ -39,11 +39,11 @@ const selectById = async function (id) {
 const selectByNameAluno = async function (nome) {
 
     try {
-        
+
         let sql = `select * from tbl_aluno where nome like "%${nome}%"`
 
         let rsAluno = await prisma.$queryRawUnsafe(sql)
-        
+
 
         return rsAluno
 
@@ -53,7 +53,7 @@ const selectByNameAluno = async function (nome) {
 
 }
 
-const insertNovoAluno = async function(dadosAluno) {
+const insertNovoAluno = async function (dadosAluno) {
     try {
         const sql = `INSERT INTO tbl_aluno(nome, 
                                             numero_matricula, 
@@ -81,23 +81,27 @@ const insertNovoAluno = async function(dadosAluno) {
 
 const updateAluno = async function (dadosAluno) {
     try {
-        let sql;
+
+        let sql
+
         sql = `UPDATE tbl_aluno SET 
                     nome = '${dadosAluno.nome}', 
                     numero_matricula = '${dadosAluno.numero_matricula}', 
                     data_nascimento = '${dadosAluno.data_nascimento}', 
                     cep = '${dadosAluno.cep}'
-                WHERE tbl_aluno.id = '${dadosAluno.id}'`;
+                WHERE tbl_aluno.id = '${dadosAluno.id}'`
 
-        let result = await prisma.$queryRawUnsafe(sql);
-        
+        let result = await prisma.$queryRawUnsafe(sql)
+
         if (result) {
-            return true;
+            return true
+
         } else {
-            return false;
+            return false
+            
         }
     } catch (error) {
-        return false;
+        return false
     }
 }
 
@@ -105,7 +109,7 @@ const updateAluno = async function (dadosAluno) {
 const deleteAluno = async function (id) {
 
     try {
-        
+
         let sql = `DELETE FROM tbl_aluno WHERE tbl_aluno.id = ${id}`
         let rsAluno = await prisma.$queryRawUnsafe(sql)
 
@@ -118,7 +122,7 @@ const deleteAluno = async function (id) {
 
 const selectResponsavelAluno = async function (id) {
     try {
-    
+
         let sql = `select * from tbl_aluno inner join tbl_aluno_responsavel on tbl_aluno.id = tbl_aluno_responsavel.id_aluno where tbl_aluno_responsavel.id_responsavel = ${id}`;
 
         let rsAlunos = await prisma.$queryRawUnsafe(sql);

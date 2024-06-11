@@ -5,17 +5,14 @@ const { json } = require('body-parser')
 const setInserirNovoAviso = async function (dadosAviso, contentType) {
     try {
 
-        let statusValidated = false
-        let avisoJSON = {}
-
-
         if (String(contentType).toLowerCase() == 'application/json') {
 
-            console.log(dadosAviso)
+            let statusValidated = false
+            let avisoJSON = {}
 
-            if (dadosAviso.titulo == '' || dadosAviso.titulo == undefined || dadosAviso.titulo == null || dadosAviso.titulo.length > 200 ||
-                dadosAviso.conteudo  == '' || dadosAviso.conteudo   == undefined || dadosAviso.conteudo   == null ||
-                dadosAviso.data_publicacao  == '' || dadosAviso.data_publicacao  == undefined || dadosAviso.data_publicacao == null || isNaN(dadosAviso.data_publicacao)
+            if (dadosAviso.titulo == '' || dadosAviso.titulo == null || dadosAviso.titulo == undefined || dadosAviso.titulo.length > 200 ||
+                dadosAviso.conteudo == '' || dadosAviso.conteudo == null || dadosAviso.conteudo == undefined ||
+                dadosAviso.data_publicacao == '' || dadosAviso.data_publicacao == null || dadosAviso.data_publicacao == undefined
             ) {
                 return message.ERROR_REQUIRED_FIELDS
 
@@ -23,24 +20,32 @@ const setInserirNovoAviso = async function (dadosAviso, contentType) {
                 statusValidated = true
             }
 
-            if (statusValidated === true) {
-                //ecaminha os dados para o dao
-                let novoavisoJSON = await responsavelDAO.insertNovoResponsavel(dadosAviso)
-                let id = await responsavelDAO.selectById()
+            if (statusValidated) {
 
-                avisoJSON.status = message.SUCESSED_CREATED_ITEM.status
-                avisoJSON.status_code = message.SUCESSED_CREATED_ITEM.status_code
-                avisoJSON.message = message.SUCESSED_CREATED_ITEM.message
-                avisoJSON.responsavel = dadosAviso
-                avisoJSON.id = dadosAviso.id
+                let novoAvisoJson = await avisoDAO.insertNovoAviso(dadosAviso)
 
-                return avisoJSON
+                if (novoAvisoJson) {
+                    avisoJSON.status = message.SUCESSED_CREATED_ITEM.status
+                    avisoJSON.status_code = message.SUCESSED_CREATED_ITEM.status_code
+                    avisoJSON.message = message.SUCESSED_CREATED_ITEM.message
+                    avisoJSON.aviso = novoAvisoJson
+                    avisoJSON.id = novoAvisoJson[0].id
+
+                    return avisoJSON
+                } else {
+
+                    return message.ERROR_INTERNAL_SERVER_DB
+
+                }
+
             }
+
         } else {
 
             return message.ERROR_CONTENT_TYPE
 
         }
+
     } catch (error) {
         return message.ERROR_INTERNAL_SERVER
     }
@@ -50,42 +55,37 @@ const setInserirNovoAviso = async function (dadosAviso, contentType) {
 
 const setAtualizarAviso = async function (id, dadosAviso, contentType) {
     try {
-
-        if (String(contentType).toLowerCase() == 'application/json') {
-            let statusValidated = false
-            let avisoJSON = {}
-
-            if (dadosAviso.titulo == '' || dadosAviso.titulo == undefined || dadosAviso.titulo == null || dadosAviso.titulo.length > 100 ||
-                dadosAviso.conteudo   == '' || dadosAviso.conteudo   == undefined || dadosAviso.conteudo   == null ||
-                dadosAviso.data_publicacao  == '' || dadosAviso.data_publicacao  == undefined || dadosAviso.data_publicacao  == null || isNaN(dadosAviso.data_publicacao )
-            ) {
-                return message.ERROR_REQUIRED_FIELDS
-            } else {
-
-                statusValidated = true
-            }
-            if (statusValidated === true) {
-                //ecaminha os dados para o dao
-                let novoavisoJSON = await responsavelDAO.insertNovoResponsavel(dadosAviso)
-                let id = await responsavelDAO.selectById()
-
-                avisoJSON.status = message.SUCESSED_CREATED_ITEM.status
-                avisoJSON.status_code = message.SUCESSED_CREATED_ITEM.status_code
-                avisoJSON.message = message.SUCESSED_CREATED_ITEM.message
-                avisoJSON.responsavel = dadosAviso
-                avisoJSON.id = dadosAviso.id
-
-                return avisoJSON
-            }
-        } else {
-
+        let avisoJson = {}
+        if (String(contentType).toLowerCase() !== 'application/json') {
             return message.ERROR_CONTENT_TYPE
         }
 
+        if (!id || isNaN(id) ||
+        dadosAviso.titulo == '' || dadosAviso.titulo == null || dadosAviso.titulo == undefined || dadosAviso.titulo.length > 200 ||
+        dadosAviso.conteudo == '' || dadosAviso.conteudo == null || dadosAviso.conteudo == undefined ||
+        dadosAviso.data_publicacao == '' || dadosAviso.data_publicacao == null || dadosAviso.data_publicacao == undefined
+        ) {
+            return message.ERROR_REQUIRED_FIELDS
+        }
+
+        dadosAviso.id = id
+        let novoAviso = await avisoDAO.updateAviso(dadosAviso)
+
+        if (novoAviso) {
+
+            avisoJson.status = message.SUCCESSED_UPDATED_ITEM
+            avisoJson.status_code = message.SUCCESSED_UPDATED_ITEM.status_code
+            avisoJson.message = message.SUCCESSED_UPDATED_ITEM.message
+            avisoJson.aviso = dadosAviso
+            avisoJson.id = dadosAviso.id
+
+            return avisoJson
+            
+        } else {
+            return message.ERROR_INTERNAL_SERVER_DB; 
+        }
     } catch (error) {
-
-        return message.ERROR_INTERNAL_SERVER
-
+        return message.ERROR_INTERNAL_SERVER; 
     }
 }
 
@@ -98,25 +98,25 @@ const setExcluirAviso = async function (id) {
         if (idAviso == '' || idAviso == undefined || isNaN(idAviso) || idAviso == null) {
             return message.ERROR_INVALID_ID //400
         } else {
-            
+
             let avisoId = await avisoDAO.selectById(idAviso)
 
-            if(avisoId.length > 0) {
+            if (avisoId.length > 0) {
 
                 let avisoDeleted = await avisoDAO.deleteAviso(idAviso)
-                
-                if(avisoDeleted){
+
+                if (avisoDeleted) {
                     return message.SUCCESSED_DELETED_ITEM //200
-                }else{
+                } else {
                     return message.ERROR_INTERNAL_SERVER_DB //500
                 }
-            }else{
+            } else {
                 return message.ERROR_NOT_FOUND //404
             }
         }
-       } catch (error) {
+    } catch (error) {
         return message.ERROR_INTERNAL_SERVER //500
-       }
+    }
 
 }
 

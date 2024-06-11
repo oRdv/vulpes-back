@@ -29,18 +29,19 @@ const controllerNota = require('./controller/controller_nota.js')
 const controllerModalidade = require('./controller/controller_modalidade.js')
 const controllerComunicado = require('./controller/controller_comunicado.js')
 const controllerTurma = require('./controller/controller_turma.js')
+const { log } = require('console')
 
 
 /////////////////////////////////// ALUNO ///////////////////////////////////
 
 
 app.get('/v1/Vulpes/Alunos', cors(), async function(request, response, next){
-    let dadosAlunos = await controllerAlunos.getListarAluno()
+    let dadosAvisoss = await controllerAlunos.getListarAluno()
     
 
-    if(dadosAlunos) {
+    if(dadosAvisoss) {
 
-        response.json(dadosAlunos)
+        response.json(dadosAvisoss)
         response.status(200)
 
     } else {
@@ -52,11 +53,11 @@ app.get('/v1/Vulpes/Alunos', cors(), async function(request, response, next){
 
 app.get('/v1/Vulpes/Alunos/:id', cors(), async function(request, response, next){
     //Recebe o id encaminhado pela requisição 
-   let idAluno = request.params.id
-   let dadosAluno = await controllerAlunos.getBuscarAluno(idAluno)
+   let idAviso = request.params.id
+   let dadosAvisos = await controllerAlunos.getBuscarAluno(idAviso)
 
-   response.status(dadosAluno.status_code)
-   response.json(dadosAluno)
+   response.status(dadosAvisos.status_code)
+   response.json(dadosAvisos)
 
 })
 
@@ -64,10 +65,10 @@ app.get('/v1/Vulpes/Alunos/:id', cors(), async function(request, response, next)
 app.get('/v1/Vulpes/Alunos/nome', cors(), async function(request, response, next){
     //Recebe o id encaminhado pela requisição 
    let nome = request.query.nome
-   let dadosAluno = await controllerAlunos.getNameAluno(nome)
+   let dadosAvisos = await controllerAlunos.getNameAluno(nome)
 
-   response.status(dadosAluno.status_code)
-   response.json(dadosAluno)
+   response.status(dadosAvisos.status_code)
+   response.json(dadosAvisos)
 
 })
 
@@ -83,23 +84,22 @@ app.get('/v1/Vulpes/Alunos/Responsavel/:id', async (req, res) => {
 });
 
 
-
 app.delete('/v1/Vulpes/Alunos/:id', cors(), async function(request, response){
-    let idAluno = request.params.id
-    let dadosAluno = await controllerAlunos.setExcluirAluno(idAluno)
+    let idAviso = request.params.id
+    let dadosAvisos = await controllerAlunos.setExcluirAluno(idAviso)
 
     response.status(200)
-    response.json(dadosAluno)
+    response.json(dadosAvisos)
 })
 
-app.put('/v1/Vulpes/atualiza/Alunos/:id', cors(), bodyParserJson, async function (request, response) {
+app.put('/v1/Vulpes/Atualizar/Alunos/:id', cors(), bodyParserJson, async function (request, response) {
     let contentType = request.headers['content-type']
-    let idAluno = request.params.id
+    let idAviso = request.params.id
     let dadosPut = request.body
-    let dadosAluno = await controllerAlunos.setAtualizarAluno(idAluno, dadosPut, contentType)
+    let dadosAvisos = await controllerAlunos.setAtualizarAluno(idAviso, dadosPut, contentType)
 
-    response.status(dadosAluno.status_code)
-    response.json(dadosAluno)
+    response.status(dadosAvisos.status_code)
+    response.json(dadosAvisos)
 })
 
 app.post('/v1/Vulpes/Inserir/Alunos', cors(), bodyParserJson, async function(request, response, next){
@@ -156,13 +156,15 @@ app.delete('/v1/Vulpes/Professor/:id', cors(), async function(request, response)
     response.json(dadosProfessor)
 })
 
+
+
 app.post('/v1/Vulpes/Inserir/Professor', cors(), bodyParserJson, async function(request, response, next){
     let contentType = request.headers['content-type'];
     let dadosBody = request.body;
 
-    let resultProf = await controllerProfessor.setInserirNovoProfessor(dadosBody, contentType);
+    let resultAviso = await controllerProfessor.setInserirNovoProfessor(dadosBody, contentType);
 
-    response.status(resultProf.status_code).json(resultProf);
+    response.status(resultAviso.status_code).json(resultAviso);
 });
 
 app.put('/v1/Vulpes/atualiza/Professor/:id', cors(), bodyParserJson, async function (request, response) {
@@ -261,15 +263,6 @@ app.post('/v1/Vulpes/Inserir/Disciplina', cors(), bodyParserJson, async function
     response.status(resultDisciplina.status_code).json(resultDisciplina);
 });
 
-// app.get('/v1/Vulpes/Professor/nome', cors(), async function(request, response, next){
-//     //Recebe o id encaminhado pela requisição 
-//    let nome = request.query.nome
-//    let dadosFrequencia = await controllerFrequencia.(nome)
-
-//    response.status(dadosFrequencia.status_code)
-//    response.json(dadosFrequencia)
-
-// })
 
 app.delete('/v1/Vulpes/Disciplina/:id', cors(), async function(request, response){
     let idDisciplina = request.params.id
@@ -421,7 +414,27 @@ app.delete('/v1/Vulpes/Aviso/:id', cors(), async function(request, response){
     let dadosAviso = await controllerAviso.setExcluirAviso(idAviso)
 
     response.status(200)
-    response.json(dadosResponsavel)
+    response.json(dadosAviso)
+})
+
+app.post('/v1/Vulpes/Inserir/Aviso', cors(), bodyParserJson, async function(request, response, next){
+    let contentType = request.headers['content-type'];
+    let dadosBody = request.body;
+
+    let resultAviso = await controllerAviso.setInserirNovoAviso(dadosBody, contentType);
+
+    response.status(resultAviso.status_code).json(resultAviso);
+});
+
+app.put('/v1/Vulpes/Atualizar/Aviso/:id', cors(), bodyParserJson, async function (request, response) {
+    let contentType = request.headers['content-type']
+    let idAviso = request.params.id
+    let dadosPut = request.body
+    let dadosAviso = await controllerAviso.setAtualizarAviso(idAviso, dadosPut, contentType)
+
+    console.log(dadosAviso);
+    response.status(dadosAviso.status_code)
+    response.json(dadosAviso)
 })
 
 /////////////////////////////////// NOTA ///////////////////////////////////
@@ -448,7 +461,7 @@ app.get('/v1/Vulpes/Nota/:id', cors(), async function(request, response, next){
    let idNota = request.params.id
    let dadosNota = await controllerNota.getBuscarNota(idNota)
 
-   response.status(dadosNota.status_code)
+
    response.json(dadosNota)
 
 })

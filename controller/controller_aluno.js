@@ -6,7 +6,6 @@ const setInserirNovoAluno = async function (dadosAluno, contentType) {
 
     try {
 
-        let statusValidated = false
         let alunoJson = {}
 
         if (String(contentType).toLowerCase() !== 'application/json') {
@@ -38,10 +37,10 @@ const setInserirNovoAluno = async function (dadosAluno, contentType) {
 }
 
 const setAtualizarAluno = async function (id, dadosAluno, contentType) {
-    let alunoJson = {};
     try {
+        let alunoJson = {}
         if (String(contentType).toLowerCase() !== 'application/json') {
-            return message.ERROR_CONTENT_TYPE;
+            return message.ERROR_CONTENT_TYPE
         }
 
         if (!id || isNaN(id) ||
@@ -50,24 +49,27 @@ const setAtualizarAluno = async function (id, dadosAluno, contentType) {
             dadosAluno.numero_matricula === '' || dadosAluno.numero_matricula === undefined || dadosAluno.numero_matricula === null || isNaN(dadosAluno.numero_matricula) ||
             dadosAluno.cep === '' || dadosAluno.cep === undefined || dadosAluno.cep === null || isNaN(dadosAluno.cep)
         ) {
-            return message.ERROR_REQUIRED_FIELDS;
+            return message.ERROR_REQUIRED_FIELDS
         }
 
-        dadosAluno.id = id;
-        let novoAluno = await alunosDao.updateAluno(dadosAluno);
+        dadosAluno.id = id
+        let novoAluno = await alunosDao.updateAluno(dadosAluno)
 
         if (novoAluno) {
-            alunoJson.status = message.SUCCESSED_UPDATED_ITEM;
-            alunoJson.status_code = message.SUCCESSED_UPDATED_ITEM.status_code;
-            alunoJson.message = message.SUCCESSED_UPDATED_ITEM.message;
-            alunoJson.aluno = dadosAluno;
 
-            return alunoJson;
+            alunoJson.status = message.SUCCESSED_UPDATED_ITEM
+            alunoJson.status_code = message.SUCCESSED_UPDATED_ITEM.status_code
+            alunoJson.message = message.SUCCESSED_UPDATED_ITEM.message
+            alunoJson.aluno = dadosAluno
+            alunoJson.id = dadosAluno.id
+
+            return alunoJson
+            
         } else {
-            return message.ERROR_INTERNAL_SERVER_DB; // Erro interno do servidor
+            return message.ERROR_INTERNAL_SERVER_DB; 
         }
     } catch (error) {
-        return message.ERROR_INTERNAL_SERVER; // Erro interno do servidor
+        return message.ERROR_INTERNAL_SERVER; 
     }
 }
 

@@ -3,7 +3,7 @@ const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 
 
-const selectAllAvisos = async function() {
+const selectAllAvisos = async function () {
 
     try {
 
@@ -13,7 +13,7 @@ const selectAllAvisos = async function() {
 
         return rsAviso
 
-      } catch (error) {
+    } catch (error) {
         return false
     }
 }
@@ -28,7 +28,7 @@ const selectById = async function (id) {
         let rsAvisos = await prisma.$queryRawUnsafe(sql)
 
         return rsAvisos
-    
+
     } catch (error) {
 
         return false
@@ -39,11 +39,11 @@ const selectById = async function (id) {
 const selectByNameAviso = async function (nome) {
 
     try {
-        
+
         let sql = `select * from tbl_aviso where titulo like "%${titulo}%"`
 
         let rsAviso = await prisma.$queryRawUnsafe(sql)
-        
+
 
         return rsAviso
 
@@ -53,24 +53,28 @@ const selectByNameAviso = async function (nome) {
 
 }
 
-const insertNovoAviso = async function(dadosAviso) {
+const insertNovoAviso = async function (dadosAviso) {
     try {
-        
+
         let sql
 
-        sql = `INSERT INTO tbl_aviso (titulo, 
+        sql = `INSERT INTO tbl_aviso (
+                                        titulo, 
                                         conteudo,
                                         data_publicacao)
-                                     VALUES (
+                                        VALUES (
                                          '${dadosAviso.titulo}',
                                          '${dadosAviso.conteudo}',
                                          '${dadosAviso.data_publicacao}'
-                                     )`
+                                     );`
 
-        console.log(sql)
-        let result = await prisma.$queryRawUnsafe(sql)
+        const result = await prisma.$queryRawUnsafe(sql)
+
         if (result) {
-            return true
+
+            const insertedAviso = await prisma.$queryRaw`SELECT * FROM tbl_aviso WHERE id = (SELECT MAX(id) FROM tbl_aviso)`
+            return insertedAviso
+
         } else {
             return false
         }
@@ -89,12 +93,12 @@ const updateAviso = async function () {
                                 titulo = '${dadosAviso.titulo}',
                                 conteudo = '${dadosAviso.conteudo}',
                                 data_publicacao = '${dadosAviso.data_publicacao}'
-                                WHERE tbl_aviso.id = '${dadosAviso.id}`
-        
+                                WHERE tbl_aviso.id = '${dadosAviso.id}'`
+
 
         let result = await prisma.$queryRawUnsafe(sql)
 
-        if(result) {
+        if (result) {
             return true
         } else {
             return false
@@ -110,7 +114,7 @@ const updateAviso = async function () {
 const deleteAviso = async function (id) {
 
     try {
-        
+
         let sql = `DELETE FROM tbl_aviso WHERE tbl_aviso.id = ${id}`
         let rsAviso = await prisma.$queryRawUnsafe(sql)
 
