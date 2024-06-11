@@ -34,6 +34,26 @@ const controllerTurma = require('./controller/controller_turma.js')
 /////////////////////////////////// ALUNO ///////////////////////////////////
 
 
+app.get('/v1/Vulpes/Alunos/Responsavel/:id', cors(), async function (request, response, next) {
+    let idResponsavel = request.params.id
+    let dadosAluno = await controllerAlunos.getAlunosPorResponsavel(idResponsavel);
+
+    response.status(dadosAluno.status_code)
+    response.json(dadosAluno)
+
+});
+
+app.get('/v1/Vulpes/Alunos/Turma/:id', cors(), async function (request, response, next) {
+    let idTurma = request.params.id
+    let dadosAluno = await controllerAlunos.getAlunosPorTurma(idTurma);
+
+    response.status(dadosAluno.status_code)
+    response.json(dadosAluno)
+
+});
+
+
+
 app.get('/v1/Vulpes/Alunos', cors(), async function(request, response, next){
     let dadosAlunos = await controllerAlunos.getListarAluno()
     
@@ -112,6 +132,16 @@ app.post('/v1/Vulpes/Inserir/Alunos', cors(), bodyParserJson, async function(req
 });
 
 /////////////////////////////////// PROFESSOR ///////////////////////////////////
+
+
+app.get('/v1/Vulpes/Professor/Disciplina/:id', cors(), async function (request, response, next) {
+    let idDisciplina = request.params.id
+    let dadosProfessor = await controllerProfessor.getProfessoresPorDisciplina(idDisciplina);
+
+    response.status(dadosProfessor.status_code)
+    response.json(dadosProfessor)
+
+});
 
 app.get('/v1/Vulpes/Professor', cors(), async function(request, response, next){
     let dadosProfessor = await controllerProfessor.getListarProfessor()
@@ -473,6 +503,15 @@ app.delete('/v1/Vulpes/Nota/:id', cors(), async function(request, response){
 
 /////////////////////////////////// MODALIDADE ///////////////////////////////////
 
+
+app.get('/v1/Vulpes/Modalidade/Turma/:id', cors(), async function (request, response, next) {
+    let idTurma = request.params.id
+    let dadosModalidade = await controllerModalidade.getModalidadesPorTurma(idTurma);
+
+    response.status(dadosModalidade.status_code)
+    response.json(dadosModalidade)
+
+});
 
 app.get('/v1/Vulpes/Modalidade', cors(), async function(request, response, next){
     let dadosModalidade = await controllerModalidade.getListarModalidade()

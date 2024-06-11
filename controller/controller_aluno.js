@@ -215,6 +215,54 @@ const getAlunoResponse = async function (id) {
     }
 };
 
+const getAlunosPorResponsavel = async function (id_responsavel) {
+    let alunosJSON = {}
+  
+    if (id_responsavel == '' || id_responsavel == undefined || isNaN(id_responsavel)) {
+      return message.ERROR_INVALID_ID
+    }
+  
+    let dadosAlunos = await alunosDao.selectByResponsavelId(id_responsavel)
+  
+    if (dadosAlunos) {
+      if (dadosAlunos.length > 0) {
+        alunosJSON.aluno = dadosAlunos
+        alunosJSON.quantidade = dadosAlunos.length
+        alunosJSON.status_code = 200
+        return alunosJSON
+      } else {
+        return message.ERROR_NOT_FOUND
+      }
+    } else {
+      return message.ERROR_INTERNAL_SERVER_DB
+    }
+  }
+
+  const getAlunosPorTurma = async function (id_turma) {
+
+    let alunosJSON = {}
+  
+    if (id_turma == '' || id_turma == undefined || isNaN(id_turma)) {
+      return message.ERROR_INVALID_ID
+    }
+  
+    let dadosAlunos = await alunosDao.selectByTurmaId(id_turma)
+  
+    if (dadosAlunos) {
+      if (dadosAlunos.length > 0) {
+        alunosJSON.aluno = dadosAlunos
+        alunosJSON.quantidade = dadosAlunos.length
+        alunosJSON.status_code = 200
+        return alunosJSON
+      } else {
+        return message.ERROR_NOT_FOUND
+      }
+    } else {
+      return message.ERROR_INTERNAL_SERVER_DB
+    }
+  }
+
+
 module.exports = {
     setInserirNovoAluno,
     setAtualizarAluno,
@@ -222,5 +270,7 @@ module.exports = {
     getListarAluno,
     getBuscarAluno,
     getNameAluno,
-    getAlunoResponse
+    getAlunoResponse,
+    getAlunosPorResponsavel,
+    getAlunosPorTurma
 }

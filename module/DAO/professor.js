@@ -2,6 +2,18 @@ const { PrismaClient } = require('@prisma/client')
 
 const prisma = new PrismaClient()
 
+const selectByDisciplinaId = async function (id_disciplina) {
+    try {
+        let sql = `select * from tbl_professor inner join tbl_disciplina_professor on tbl_professor.id = tbl_disciplina_professor.id_professor where tbl_disciplina_professor.id_disciplina = ${id_disciplina};`;
+
+        let rsProfessor = await prisma.$queryRawUnsafe(sql)
+
+        return rsProfessor
+    } catch (error) {
+        return false
+    }
+}
+
 
 const selectAllProfessores = async function() {
 
@@ -130,6 +142,6 @@ module.exports = {
     deleteProfessor,
     selectAllProfessores,
     selectById,
-    selectByNameProfessor
-
+    selectByNameProfessor,
+    selectByDisciplinaId
 }
