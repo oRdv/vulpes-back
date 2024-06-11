@@ -66,7 +66,7 @@ const insertNovoComunicado = async function(dadosComunicado) {
                                          '${dadosComunicado.titulo}',
                                          '${dadosComunicado.conteudo}',
                                          '${dadosComunicado.data_publicacao}',
-                                         '${dadosComunicado.id_responsavel}'
+                                         ${dadosComunicado.id_responsavel}
                                      )`
 
         console.log(sql)

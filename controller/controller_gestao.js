@@ -1,51 +1,58 @@
 const message = require('../modulo/config.js')
 const gestaoDAO = require('../module/DAO/gestao.js')
 const { json } = require('body-parser')
-const { setInserirNovaDisciplina } = require('./controller_disciplina.js')
 
 const setInserirNovaGestao = async function (dadosGestao, contentType) {
     try {
 
-        let statusValidated = false
-        let gestaoJson = {}
-
-
         if (String(contentType).toLowerCase() == 'application/json') {
 
-            console.log(dadosGestao)
-
-            if (dadosGestao.nome == '' || dadosGestao.nome == undefined || dadosGestao.nome == null || dadosGestao.nome.length > 100
+            let statusValidated = false
+            let gestaoJson = {}
+            
+            if (
+                dadosGestao.nome == null || dadosGestao.nome == undefined || dadosGestao.nome.length > 150 ||
+                dadosGestao.email == null || dadosGestao.email == undefined || dadosGestao.email.length > 100 ||
+                dadosGestao.senha == null || dadosGestao.senha == undefined || dadosGestao.senha.length > 16
             ) {
                 return message.ERROR_REQUIRED_FIELDS
-
+    
             } else {
-                statusValidated = true
+    
+                statusValidated = true;
+            }
+    
+            if (statusValidated) {
+    
+                let novaGestao = await gestaoDAO.insertNovaGestao(dadosGestao);
+    
+                if (novaGestao) {
+                    gestaoJson.status = message.SUCESSED_CREATED_ITEM.status
+                    gestaoJson.status_code = message.SUCESSED_CREATED_ITEM.status_code
+                    gestaoJson.message = message.SUCESSED_CREATED_ITEM.message
+                    gestaoJson.professor = novaGestao
+                    gestaoJson.id = novoprofessorJson[0].id
+    
+                    return gestaoJson
+    
+                } else {
+    
+                    return message.ERROR_INTERNAL_SERVER_DB
+                }
             }
 
-            if (statusValidated === true) {
-                //ecaminha os dados para o dao
-                let novogestaoJson = await gestaoDAO.insertNovaDisciplina(dadosGestao)
-                let id = await gestaoDAO.selectById()
-
-                gestaoJson.status = message.SUCESSED_CREATED_ITEM.status
-                gestaoJson.status_code = message.SUCESSED_CREATED_ITEM.status_code
-                gestaoJson.message = message.SUCESSED_CREATED_ITEM.message
-                gestaoJson.disciplina = dadosGestao
-                gestaoJson.id = dadosGestao.id
-
-                return gestaoJson
-            }
         } else {
 
             return message.ERROR_CONTENT_TYPE
-
         }
-    } catch (error) {
+    } 
+    catch (error) {
         return message.ERROR_INTERNAL_SERVER
     }
 
-
 }
+
+
 
 const setAtualizarGestao = async function (id, dadosGestao, contentType) {
     try {

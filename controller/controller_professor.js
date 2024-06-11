@@ -1,7 +1,6 @@
 const message = require('../modulo/config.js')
 const professorDAO = require('../module/DAO/professor.js')
 const { json } = require('body-parser')
-const aluno = require('../module/DAO/aluno.js')
 
 const setInserirNovoProfessor = async function (dadosProfessor, contentType) {
     try {

@@ -325,6 +325,15 @@ app.delete('/v1/Vulpes/dadosGestao/:id', cors(), async function(request, respons
     response.json(dadosGestao)
 })
 
+app.post('/v1/Vulpes/Inserir/Gestao', cors(), bodyParserJson, async function(request, response, next){
+    let contentType = request.headers['content-type'];
+    let dadosBody = request.body;
+
+    let resultGestao = await controllerGestao.setInserirNovaGestao(dadosBody, contentType);
+
+    response.status(resultGestao.status_code).json(resultGestao);
+});
+
 /////////////////////////////////// RESPONSAVEL ///////////////////////////////////
 
 
@@ -559,6 +568,16 @@ app.delete('/v1/Vulpes/Comunicado/:id', cors(), async function(request, response
     response.status(200)
     response.json(dadosComunicado)
 })
+
+
+app.post('/v1/Vulpes/Inserir/Comunicado', cors(), bodyParserJson, async function(request, response, next){
+    let contentType = request.headers['content-type'];
+    let dadosBody = request.body;
+
+    let resultComunicado = await controllerComunicado.setInserirNovoComunicado(dadosBody, contentType);
+
+    response.status(resultComunicado.status_code).json(resultComunicado);
+});
 
 /////////////////////////////////// TURMA ///////////////////////////////////
 

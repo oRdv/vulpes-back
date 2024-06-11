@@ -5,48 +5,52 @@ const { json } = require('body-parser')
 const setInserirNovoComunicado = async function (dadosComunicado, contentType) {
     try {
 
-        let statusValidated = false
-        let comunicadoJson = {}
-
-
         if (String(contentType).toLowerCase() == 'application/json') {
 
+            let statusValidated = false
+            let comunicadoJson = {}
+            
             console.log(dadosComunicado)
-
-            if (dadosComunicado.titulo == '' || dadosComunicado.titulo == undefined || dadosComunicado.titulo == null || dadosComunicado.titulo.length > 200 ||
+            if (
+                dadosComunicado.titulo == '' || dadosComunicado.titulo == undefined || dadosComunicado.titulo == null || dadosComunicado.titulo.length > 200 ||
                 dadosComunicado.conteudo  == '' || dadosComunicado.conteudo   == undefined || dadosComunicado.conteudo   == null ||
-                dadosComunicado.data_publicacao  == '' || dadosComunicado.data_publicacao  == undefined || dadosComunicado.data_publicacao == null || isNaN(dadosComunicado.data_publicacao) ||
+                dadosComunicado.data_publicacao  == '' || dadosComunicado.data_publicacao  == undefined || dadosComunicado.data_publicacao == null ||
                 dadosComunicado.id_responsavel  == '' || dadosComunicado.id_responsavel  == undefined || dadosComunicado.id_responsavel == null || isNaN(dadosComunicado.id_responsavel)
             ) {
                 return message.ERROR_REQUIRED_FIELDS
-
+    
             } else {
-                statusValidated = true
+    
+                statusValidated = true;
+            }
+    
+            if (statusValidated) {
+    
+                let novocomunicadoJson = await comunicadoDAO.insertNovoComunicado(dadosComunicado);
+    
+                if (novocomunicadoJson) {
+                    comunicadoJson.status = message.SUCESSED_CREATED_ITEM.status
+                    comunicadoJson.status_code = message.SUCESSED_CREATED_ITEM.status_code
+                    comunicadoJson.message = message.SUCESSED_CREATED_ITEM.message
+                    comunicadoJson.comunicado = novocomunicadoJson
+                    comunicadoJson.id = novocomunicadoJson[0].id
+    
+                    return comunicadoJson
+    
+                } else {
+    
+                    return message.ERROR_INTERNAL_SERVER_DB
+                }
             }
 
-            if (statusValidated === true) {
-                //ecaminha os dados para o dao
-                let novocomunicadoJson = await comunicadoDAO.insertNovoComunicado(dadosComunicado)
-                let id = await comunicadoDAO.selectById()
-
-                comunicadoJson.status = message.SUCESSED_CREATED_ITEM.status
-                comunicadoJson.status_code = message.SUCESSED_CREATED_ITEM.status_code
-                comunicadoJson.message = message.SUCESSED_CREATED_ITEM.message
-                comunicadoJson.comunicado = dadosComunicado
-                comunicadoJson.id = dadosComunicado.id
-
-                return comunicadoJson
-            }
         } else {
 
             return message.ERROR_CONTENT_TYPE
-
         }
-    } catch (error) {
+    } 
+    catch (error) {
         return message.ERROR_INTERNAL_SERVER
     }
-
-
 }
 
 const setAtualizarComunicado = async function (id, dadosComunicado, contentType) {

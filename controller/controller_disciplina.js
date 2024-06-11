@@ -5,44 +5,50 @@ const { json } = require('body-parser')
 const setInserirNovaDisciplina = async function (dadosDisciplina, contentType) {
     try {
 
-        let statusValidated = false
-        let disciplinaJson = {}
-
-
         if (String(contentType).toLowerCase() == 'application/json') {
 
+            let statusValidated = false
+            let disciplinaJson = {}
+            
             console.log(dadosDisciplina)
-
-            if (dadosDisciplina.nome == '' || dadosDisciplina.nome == undefined || dadosDisciplina.nome == null || dadosDisciplina.nome.length > 100
+            if (
+                dadosDisciplina.nome == '' || dadosDisciplina.nome == undefined || dadosDisciplina.nome == null || dadosDisciplina.nome.length > 100
             ) {
                 return message.ERROR_REQUIRED_FIELDS
-
+    
             } else {
-                statusValidated = true
+    
+                statusValidated = true;
+            }
+    
+            if (statusValidated) {
+    
+                let novaDisciplinaJSON = await disciplinaDAO.insertNovaDisciplina(dadosDisciplina);
+    
+                if (novaDisciplinaJSON) {
+
+                    disciplinaJson.status = message.SUCESSED_CREATED_ITEM.status
+                    disciplinaJson.status_code = message.SUCESSED_CREATED_ITEM.status_code
+                    disciplinaJson.message = message.SUCESSED_CREATED_ITEM.message
+                    disciplinaJson.disciplina = novaDisciplinaJSON
+                    disciplinaJson.id = novaDisciplinaJSON[0].id
+    
+                    return disciplinaJson
+    
+                } else {
+    
+                    return message.ERROR_INTERNAL_SERVER_DB
+                }
             }
 
-            if (statusValidated === true) {
-                //ecaminha os dados para o dao
-                let novodisciplinaJson = await disciplinaDAO.insertNovaDisciplina(dadosDisciplina)
-                let id = await disciplinaDAO.selectById()
-
-                disciplinaJson.status = message.SUCESSED_CREATED_ITEM.status
-                disciplinaJson.status_code = message.SUCESSED_CREATED_ITEM.status_code
-                disciplinaJson.message = message.SUCESSED_CREATED_ITEM.message
-                disciplinaJson.disciplina = dadosDisciplina
-                disciplinaJson.id = dadosDisciplina.id
-
-                return disciplinaJson
-            }
         } else {
 
             return message.ERROR_CONTENT_TYPE
-
         }
-    } catch (error) {
+    } 
+    catch (error) {
         return message.ERROR_INTERNAL_SERVER
     }
-
 
 }
 
