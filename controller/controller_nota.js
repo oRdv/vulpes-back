@@ -5,42 +5,53 @@ const { json } = require('body-parser')
 const setInserirNovaNota = async function (dadosNota, contentType) {
     try {
 
-        let statusValidated = false
-        let notaJSON = {}
-
-
         if (String(contentType).toLowerCase() == 'application/json') {
 
-            console.log(dadosNota)
+            let statusValidated = false
+            let notaJson = {}
 
-            if (dadosNota.titulo == '' || dadosNota.titulo == undefined || dadosNota.titulo == null || dadosNota.titulo.length > 200 ||
-                dadosNota.conteudo  == '' || dadosNota.conteudo   == undefined || dadosNota.conteudo   == null ||
-                dadosNota.data_publicacao  == '' || dadosNota.data_publicacao  == undefined || dadosNota.data_publicacao == null || isNaN(dadosNota.data_publicacao)
+            if (
+                dadosNota.aluno_id == null || isNaN(dadosNota.aluno_id) ||
+                dadosNota.disciplina_id == null || isNaN(dadosNota.disciplina_id) ||
+                dadosNota.valor == null || dadosNota.valor > 999.99 ||
+                dadosNota.data_lancamento == '' || dadosNota.data_lancamento == null || dadosNota.data_lancamento == undefined
+
             ) {
+                
                 return message.ERROR_REQUIRED_FIELDS
-
+                
             } else {
+
+
                 statusValidated = true
             }
+            
+            if (statusValidated) {
 
-            if (statusValidated === true) {
-                //ecaminha os dados para o dao
-                let novonotaJSON = await responsavelDAO.insertNovoResponsavel(dadosNota)
-                let id = await responsavelDAO.selectById()
+                let novonotaJson = await notaDAO.insertNovaNota(dadosNota)
 
-                notaJSON.status = message.SUCESSED_CREATED_ITEM.status
-                notaJSON.status_code = message.SUCESSED_CREATED_ITEM.status_code
-                notaJSON.message = message.SUCESSED_CREATED_ITEM.message
-                notaJSON.responsavel = dadosNota
-                notaJSON.id = dadosNota.id
+                if (novonotaJson) {
+                    notaJson.status = message.SUCESSED_CREATED_ITEM.status
+                    notaJson.status_code = message.SUCESSED_CREATED_ITEM.status_code
+                    notaJson.message = message.SUCESSED_CREATED_ITEM.message
+                    notaJson.nota = novonotaJson
+                    notaJson.id = novonotaJson[0].id
 
-                return notaJSON
+                    return notaJson
+                } else {
+
+                    return message.ERROR_INTERNAL_SERVER_DB
+
+                }
+
             }
+
         } else {
 
             return message.ERROR_CONTENT_TYPE
 
         }
+
     } catch (error) {
         return message.ERROR_INTERNAL_SERVER
     }
@@ -55,9 +66,10 @@ const setAtualizarAviso = async function (id, dadosNota, contentType) {
             let statusValidated = false
             let notaJSON = {}
 
-            if (dadosNota.titulo == '' || dadosNota.titulo == undefined || dadosNota.titulo == null || dadosNota.titulo.length > 100 ||
-                dadosNota.conteudo   == '' || dadosNota.conteudo   == undefined || dadosNota.conteudo   == null ||
-                dadosNota.data_publicacao  == '' || dadosNota.data_publicacao  == undefined || dadosNota.data_publicacao  == null || isNaN(dadosNota.data_publicacao )
+            if (dadosNota.aluno_id == null || isNaN(dadosNota.aluno_id) ||
+                dadosNota.disciplina_id == null || isNaN(dadosNota.disciplina_id) ||
+                dadosNota.valor == null || dadosNota.valor > 999.99 ||
+                dadosNota.data_lancamento == '' || dadosNota.data_lancamento == null || dadosNota.data_lancamento == undefined
             ) {
                 return message.ERROR_REQUIRED_FIELDS
             } else {
@@ -65,9 +77,6 @@ const setAtualizarAviso = async function (id, dadosNota, contentType) {
                 statusValidated = true
             }
             if (statusValidated === true) {
-                //ecaminha os dados para o dao
-                let novonotaJSON = await responsavelDAO.insertNovoResponsavel(dadosNota)
-                let id = await responsavelDAO.selectById()
 
                 notaJSON.status = message.SUCESSED_CREATED_ITEM.status
                 notaJSON.status_code = message.SUCESSED_CREATED_ITEM.status_code
@@ -98,25 +107,25 @@ const setExcluirNota = async function (id) {
         if (idNota == '' || idNota == undefined || isNaN(idNota) || idNota == null) {
             return message.ERROR_INVALID_ID //400
         } else {
-            
+
             let notaId = await no.selectById(idNota)
 
-            if(notaId.length > 0) {
+            if (notaId.length > 0) {
 
                 let notaDeleted = await notaDAO.deleteNota(idNota)
-                
-                if(notaDeleted){
+
+                if (notaDeleted) {
                     return message.SUCCESSED_DELETED_ITEM //200
-                }else{
+                } else {
                     return message.ERROR_INTERNAL_SERVER_DB //500
                 }
-            }else{
+            } else {
                 return message.ERROR_NOT_FOUND //404
             }
         }
-       } catch (error) {
+    } catch (error) {
         return message.ERROR_INTERNAL_SERVER //500
-       }
+    }
 
 }
 
@@ -181,5 +190,5 @@ module.exports = {
     setExcluirNota,
     getListarNota,
     getBuscarNota
-    
+
 }

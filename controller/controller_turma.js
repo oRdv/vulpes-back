@@ -5,18 +5,16 @@ const { json } = require('body-parser')
 const setInserirNovaTurma = async function (dadosTurma, contentType) {
     try {
 
-        let statusValidated = false
-        let turmaJson = {}
-
-
         if (String(contentType).toLowerCase() == 'application/json') {
 
-            console.log(dadosTurma)
+            let statusValidated = false
+            let turmaJson = {}
+
 
             if (dadosTurma.nome == '' || dadosTurma.nome == undefined || dadosTurma.nome == null || dadosTurma.nome.length > 255 ||
                 dadosTurma.modalidade == '' || dadosTurma.modalidade == undefined || dadosTurma.modalidade == null || dadosTurma.modalidade.length > 50 ||
-                dadosTurma.nome == '' || dadosTurma.nome == undefined || dadosTurma.nome == null || dadosTurma.nome.length > 8 ||
-                dadosTurma.nome == '' || dadosTurma.nome == undefined || dadosTurma.nome == null || dadosTurma.nome.length > 8
+                dadosTurma.data_inicio == '' || dadosTurma.data_inicio == undefined || dadosTurma.data_inicio == null ||
+                dadosTurma.data_fim == '' || dadosTurma.data_fim == undefined || dadosTurma.data_fim == null
             ) {
                 return message.ERROR_REQUIRED_FIELDS
 
@@ -24,24 +22,28 @@ const setInserirNovaTurma = async function (dadosTurma, contentType) {
                 statusValidated = true
             }
 
-            if (statusValidated === true) {
-                //ecaminha os dados para o dao
-                let novoturmaJson = await turmaDAO.insertNovaTurma(dadosTurma)
-                let id = await turmaDAO.selectById()
+            if (statusValidated) {
 
-                turmaJson.status = message.SUCESSED_CREATED_ITEM.status
-                turmaJson.status_code = message.SUCESSED_CREATED_ITEM.status_code
-                turmaJson.message = message.SUCESSED_CREATED_ITEM.message
-                turmaJson.turma = dadosTurma
-                turmaJson.id = dadosTurma.id
+                let novaTurmaJson = await turmaDAO.insertNovaTurma(dadosTurma)
 
-                return turmaJson
+                if (novaTurmaJson) {
+                    turmaJson.status = message.SUCESSED_CREATED_ITEM.status
+                    turmaJson.status_code = message.SUCESSED_CREATED_ITEM.status_code
+                    turmaJson.message = message.SUCESSED_CREATED_ITEM.message
+                    turmaJson.turma = novaTurmaJson
+                    turmaJson.id = novaTurmaJson[0].id
+
+                    return turmaJson
+                } else {
+
+                    return message.ERROR_INTERNAL_SERVER_DB
+
+                }
             }
         } else {
-
             return message.ERROR_CONTENT_TYPE
-
         }
+
     } catch (error) {
         return message.ERROR_INTERNAL_SERVER
     }

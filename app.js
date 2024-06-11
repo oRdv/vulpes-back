@@ -29,7 +29,7 @@ const controllerNota = require('./controller/controller_nota.js')
 const controllerModalidade = require('./controller/controller_modalidade.js')
 const controllerComunicado = require('./controller/controller_comunicado.js')
 const controllerTurma = require('./controller/controller_turma.js')
-const { log } = require('console')
+const controllerFormacao = require('./controller/controller_formacao.js')
 
 
 /////////////////////////////////// ALUNO ///////////////////////////////////
@@ -272,6 +272,16 @@ app.delete('/v1/Vulpes/Disciplina/:id', cors(), async function(request, response
     response.json(dadosFrequencia)
 })
 
+app.post('/v1/Vulpes/Inserir/Disciplina', cors(), bodyParserJson, async function(request, response, next){
+    let contentType = request.headers['content-type'];
+    let dadosBody = request.body;
+
+    let resultDisciplina = await controllerDisciplina.setInserirNovaDisciplina(dadosBody, contentType);
+
+    response.status(resultDisciplina.status_code).json(resultDisciplina);
+});
+
+
 
 /////////////////////////////////// GESTAO ///////////////////////////////////
 
@@ -367,6 +377,14 @@ app.delete('/v1/Vulpes/Responsavel/:id', cors(), async function(request, respons
     response.json(dadosResponsavel)
 })
 
+app.post('/v1/Vulpes/Inserir/Responsavel', cors(), bodyParserJson, async function(request, response, next){
+    let contentType = request.headers['content-type'];
+    let dadosBody = request.body;
+
+    let resultResponsavel = await controllerResponsavel.setInserirNovoResponsavel(dadosBody, contentType);
+
+    response.status(resultResponsavel.status_code).json(resultResponsavel);
+});
 
 /////////////////////////////////// AVISO ///////////////////////////////////
 
@@ -432,7 +450,7 @@ app.put('/v1/Vulpes/Atualizar/Aviso/:id', cors(), bodyParserJson, async function
     let dadosPut = request.body
     let dadosAviso = await controllerAviso.setAtualizarAviso(idAviso, dadosPut, contentType)
 
-    console.log(dadosAviso);
+    // console.log(dadosAviso);
     response.status(dadosAviso.status_code)
     response.json(dadosAviso)
 })
@@ -474,6 +492,16 @@ app.delete('/v1/Vulpes/Nota/:id', cors(), async function(request, response){
     response.status(200)
     response.json(dadosNota)
 })
+
+app.post('/v1/Vulpes/Inserir/Nota', cors(), bodyParserJson, async function(request, response, next){
+    let contentType = request.headers['content-type'];
+    let dadosBody = request.body;
+
+    let resultNota = await controllerNota.setInserirNovaNota(dadosBody, contentType);
+
+    response.status(resultNota.status_code).json(resultNota);
+});
+
 
 /////////////////////////////////// MODALIDADE ///////////////////////////////////
 
@@ -523,6 +551,17 @@ app.delete('/v1/Vulpes/Modalidade/:id', cors(), async function(request, response
     response.status(200)
     response.json(dadosModalidade)
 })
+
+app.post('/v1/Vulpes/Inserir/Modalidade', cors(), bodyParserJson, async function(request, response, next){
+    let contentType = request.headers['content-type'];
+    let dadosBody = request.body;
+
+    let resultModalidade = await controllerModalidade.setInserirNovaModalidade(dadosBody, contentType);
+
+    response.status(resultModalidade.status_code).json(resultModalidade);
+});
+
+
 
 /////////////////////////////////// COMUNICADO ///////////////////////////////////
 
@@ -593,8 +632,8 @@ app.get('/v1/Vulpes/Turma', cors(), async function(request, response, next){
 
 app.get('/v1/Vulpes/Turma/:id', cors(), async function(request, response, next){
     //Recebe o id encaminhado pela requisição 
-   let idTurma = request.params.id
-   let dadosTurma = await controllerTurma.getBuscarTurma(idTurma)
+   let idFormacao = request.params.id
+   let dadosTurma = await controllerTurma.getBuscarTurma(idFormacao)
 
    response.status(dadosTurma.status_code)
    response.json(dadosTurma)
@@ -614,12 +653,80 @@ app.get('/v1/Vulpes/Turma/nome', cors(), async function(request, response, next)
 
 
 app.delete('/v1/Vulpes/Turma/:id', cors(), async function(request, response){
-    let idTurma = request.params.id
-    let dadosTurma = await controllerComunicado.setExcluirComunicado(idTurma)
+    let idFormacao = request.params.id
+    let dadosTurma = await controllerComunicado.setExcluirComunicado(idFormacao)
 
     response.status(200)
     response.json(dadosTurma)
 })
+
+app.post('/v1/Vulpes/Inserir/Turma', cors(), bodyParserJson, async function(request, response, next){
+    let contentType = request.headers['content-type'];
+    let dadosBody = request.body;
+
+    let resultTurma = await controllerTurma.setInserirNovaTurma(dadosBody, contentType);
+
+    response.status(resultTurma.status_code).json(resultTurma);
+});
+
+
+/////////////////////////////////// FORMAÇÃO ///////////////////////////////////
+
+
+app.get('/v1/Vulpes/Formacao', cors(), async function(request, response, next){
+    let dadosFormacao = await controllerFormacao.getListarFormacao()
+
+    if(dadosFormacao) {
+
+        response.json(dadosFormacao)
+        response.status(200)
+
+    } else {
+        response.json({message: 'Nenhum registro encontrado'})
+        response.status(200)
+    }
+})
+
+
+app.get('/v1/Vulpes/Formacao/:id', cors(), async function(request, response, next){
+    //Recebe o id encaminhado pela requisição 
+   let idFormacao = request.params.id
+   let dadosFormacao = await controllerFormacao.getBuscarFormacao(idFormacao)
+
+   response.status(dadosFormacao.status_code)
+   response.json(dadosFormacao)
+
+})
+
+
+app.get('/v1/Vulpes/Formacao/universidade', cors(), async function(request, response, next){
+    //Recebe o id encaminhado pela requisição 
+   let universidade = request.query.universidade
+   let dadosFormacao = await controllerFormacao.getNameUniversidade(universidade)
+
+   response.status(dadosFormacao.status_code)
+   response.json(dadosFormacao)
+
+})
+
+
+app.delete('/v1/Vulpes/Formacao/:id', cors(), async function(request, response){
+    let idFormacao = request.params.id
+    let dadosFormacao = await controllerFormacao.setExcluirFormacao(idFormacao)
+
+    response.status(200)
+    response.json(dadosFormacao)
+})
+
+app.post('/v1/Vulpes/Inserir/Formacao', cors(), bodyParserJson, async function(request, response, next){
+    let contentType = request.headers['content-type'];
+    let dadosBody = request.body;
+
+    let resutFormacao = await controllerFormacao.setInserirNovaFormacao(dadosBody, contentType);
+
+    response.status(resutFormacao.status_code).json(resutFormacao);
+});
+
 
 
 app.listen(8080, function(){

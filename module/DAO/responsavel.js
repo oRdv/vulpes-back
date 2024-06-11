@@ -60,19 +60,20 @@ const insertNovoResponsavel = async function(dadosResponsavel) {
 
         sql = `INSERT INTO tbl_responsavel (nome, 
                                             email,
-                                            senha,
-                                            id_aluno)
+                                            senha)
                                      VALUES (
                                          '${dadosResponsavel.nome}',
-                                         '${dadosResponsavel.email}',
-                                         '${dadosResponsavel.senha}',
-                                         '${dadosResponsavel.id_aluno}'
+                                         '${dadosResponsavel.email}'
+                                         '${dadosResponsavel.senha}'
                                      )`
 
         console.log(sql)
         let result = await prisma.$queryRawUnsafe(sql)
         if (result) {
-            return true
+
+            const insertResponsavel = await prisma.$queryRaw`SELECT * FROM tbl_responsavel WHERE id = (SELECT MAX(id) FROM tbl_responsavel)`
+            return insertResponsavel
+
         } else {
             return false
         }

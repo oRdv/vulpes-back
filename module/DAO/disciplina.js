@@ -53,6 +53,7 @@ const selectByNameDisciplina = async function (nome) {
 
 }
 const insertNovaDisciplina = async function(dadosDisciplina) {
+
     try {
         
         let sql
@@ -60,12 +61,15 @@ const insertNovaDisciplina = async function(dadosDisciplina) {
         sql = `INSERT INTO tbl_disciplina (nome)
                                      VALUES (
                                          '${dadosDisciplina.nome}'
-                                     );`
+                                     )`
 
-        console.log(sql)
         let result = await prisma.$queryRawUnsafe(sql)
+
         if (result) {
-            return true
+
+            const insertedDisciplina = await prisma.$queryRaw`SELECT * FROM tbl_disciplina WHERE id = (SELECT MAX(id) FROM tbl_disciplina)`
+            return insertedDisciplina
+
         } else {
             return false
         }

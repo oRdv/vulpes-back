@@ -63,10 +63,13 @@ const insertNovaModalidade = async function(dadosDisciplina) {
                                          '${dadosDisciplina.nome}'
                                      )`
 
-        console.log(sql)
         let result = await prisma.$queryRawUnsafe(sql)
+
         if (result) {
-            return true
+
+            const insertedModalidade = await prisma.$queryRaw`SELECT * FROM tbl_modalidade WHERE id = (SELECT MAX(id) FROM tbl_modalidade)`
+            return insertedModalidade
+
         } else {
             return false
         }

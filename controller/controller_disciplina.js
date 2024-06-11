@@ -5,15 +5,12 @@ const { json } = require('body-parser')
 const setInserirNovaDisciplina = async function (dadosDisciplina, contentType) {
     try {
 
-        let statusValidated = false
-        let disciplinaJson = {}
-
-
         if (String(contentType).toLowerCase() == 'application/json') {
 
-            console.log(dadosDisciplina)
+            let statusValidated = false
+            let disciplinaJson = {}
 
-            if (dadosDisciplina.nome == '' || dadosDisciplina.nome == undefined || dadosDisciplina.nome == null || dadosDisciplina.nome.length > 100
+            if (dadosDisciplina.nome == '' || dadosDisciplina.nome == null || dadosDisciplina.nome == undefined || dadosDisciplina.nome.length > 200 
             ) {
                 return message.ERROR_REQUIRED_FIELDS
 
@@ -21,28 +18,35 @@ const setInserirNovaDisciplina = async function (dadosDisciplina, contentType) {
                 statusValidated = true
             }
 
-            if (statusValidated === true) {
-                //ecaminha os dados para o dao
+            if (statusValidated) {
+
                 let novodisciplinaJson = await disciplinaDAO.insertNovaDisciplina(dadosDisciplina)
-                let id = await disciplinaDAO.selectById()
 
-                disciplinaJson.status = message.SUCESSED_CREATED_ITEM.status
-                disciplinaJson.status_code = message.SUCESSED_CREATED_ITEM.status_code
-                disciplinaJson.message = message.SUCESSED_CREATED_ITEM.message
-                disciplinaJson.disciplina = dadosDisciplina
-                disciplinaJson.id = dadosDisciplina.id
+                if (novodisciplinaJson) {
+                    disciplinaJson.status = message.SUCESSED_CREATED_ITEM.status
+                    disciplinaJson.status_code = message.SUCESSED_CREATED_ITEM.status_code
+                    disciplinaJson.message = message.SUCESSED_CREATED_ITEM.message
+                    disciplinaJson.disciplina = novodisciplinaJson
+                    disciplinaJson.id = novodisciplinaJson[0].id
 
-                return disciplinaJson
+                    return disciplinaJson
+                } else {
+
+                    return message.ERROR_INTERNAL_SERVER_DB
+
+                }
+
             }
+
         } else {
 
             return message.ERROR_CONTENT_TYPE
 
         }
+
     } catch (error) {
         return message.ERROR_INTERNAL_SERVER
     }
-
 
 }
 

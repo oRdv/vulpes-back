@@ -70,10 +70,13 @@ const insertNovaTurma = async function(dadosTurma) {
                                          '${dadosTurma.data_fim}'
                                      )`
 
-        console.log(sql)
         let result = await prisma.$queryRawUnsafe(sql)
+        
         if (result) {
-            return true
+
+            const insertedTurma = await prisma.$queryRaw`SELECT * FROM tbl_turma WHERE id = (SELECT MAX(id) FROM tbl_turma)`
+            return insertedTurma
+            
         } else {
             return false
         }

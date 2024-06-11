@@ -47,16 +47,19 @@ const insertNovaNota = async function(dadosNota) {
                                     valor,
                                     data_lancamento)
                                      VALUES (
-                                         '${dadosNota.id_aluno}',
-                                         '${dadosNota.id_disciplina}',
+                                         ${dadosNota.aluno_id},
+                                         ${dadosNota.disciplina_id},
                                          '${dadosNota.valor}',
                                          '${dadosNota.data_lancamento}'
                                      )`
 
-        console.log(sql)
         let result = await prisma.$queryRawUnsafe(sql)
+
         if (result) {
-            return true
+
+            const insertedNota = await prisma.$queryRaw`SELECT * FROM tbl_nota WHERE id = (SELECT MAX(id) FROM tbl_nota)`
+            return insertedNota
+
         } else {
             return false
         }

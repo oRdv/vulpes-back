@@ -5,18 +5,14 @@ const { json } = require('body-parser')
 const setInserirNovoResponsavel = async function (dadosResponsavel, contentType) {
     try {
 
-        let statusValidated = false
-        let responsavelJson = {}
-
-
         if (String(contentType).toLowerCase() == 'application/json') {
 
-            console.log(dadosResponsavel)
+            let statusValidated = false
+            let responsavelJson = {}
 
-            if (dadosResponsavel.nome == '' || dadosResponsavel.nome == undefined || dadosResponsavel.nome == null || dadosResponsavel.nome.length > 100 ||
-                dadosResponsavel.email  == '' || dadosResponsavel.email  == undefined || dadosResponsavel.email  == null || dadosResponsavel.email.length > 100 ||
-                dadosResponsavel.senha  == '' || dadosResponsavel.senha  == undefined || dadosResponsavel.senha  == null || dadosResponsavel.senha.length > 100 ||
-                dadosResponsavel.id_aluno  == '' || dadosResponsavel.id_aluno  == undefined || dadosResponsavel.id_aluno  == null || isNaN(dadosResponsavel.id_aluno )
+            if (dadosResponsavel.nome == '' || dadosResponsavel.nome == undefined || dadosResponsavel.nome == null || dadosResponsavel.nome.length > 100 || 
+                dadosResponsavel.email  == '' || dadosResponsavel.email  == undefined || dadosResponsavel.email  == null || dadosResponsavel.email.length > 100 || 
+                dadosResponsavel.senha  == '' || dadosResponsavel.senha  == undefined || dadosResponsavel.senha  == null || dadosResponsavel.senha.length > 100 
             ) {
                 return message.ERROR_REQUIRED_FIELDS
 
@@ -24,29 +20,35 @@ const setInserirNovoResponsavel = async function (dadosResponsavel, contentType)
                 statusValidated = true
             }
 
-            if (statusValidated === true) {
-                //ecaminha os dados para o dao
+            if (statusValidated) {
+
                 let novoresponsavelJson = await responsavelDAO.insertNovoResponsavel(dadosResponsavel)
-                let id = await responsavelDAO.selectById()
 
-                responsavelJson.status = message.SUCESSED_CREATED_ITEM.status
-                responsavelJson.status_code = message.SUCESSED_CREATED_ITEM.status_code
-                responsavelJson.message = message.SUCESSED_CREATED_ITEM.message
-                responsavelJson.responsavel = dadosResponsavel
-                responsavelJson.id = dadosResponsavel.id
+                if (novoresponsavelJson) {
+                    responsavelJson.status = message.SUCESSED_CREATED_ITEM.status
+                    responsavelJson.status_code = message.SUCESSED_CREATED_ITEM.status_code
+                    responsavelJson.message = message.SUCESSED_CREATED_ITEM.message
+                    responsavelJson.responsavel = novoresponsavelJson
+                    responsavelJson.id = novoresponsavelJson[0].id
 
-                return responsavelJson
+                    return responsavelJson
+                } else {
+
+                    return message.ERROR_INTERNAL_SERVER_DB
+
+                }
+
             }
+
         } else {
 
             return message.ERROR_CONTENT_TYPE
 
         }
+
     } catch (error) {
         return message.ERROR_INTERNAL_SERVER
     }
-
-
 }
 
 const setAtualizarResponsavel = async function (id, dadosResponsavel, contentType) {
@@ -57,9 +59,9 @@ const setAtualizarResponsavel = async function (id, dadosResponsavel, contentTyp
             let responsavelJson = {}
 
             if (dadosResponsavel.nome == '' || dadosResponsavel.nome == undefined || dadosResponsavel.nome == null || dadosResponsavel.nome.length > 100 ||
-                dadosResponsavel.email  == '' || dadosResponsavel.email  == undefined || dadosResponsavel.email  == null || dadosResponsavel.email .length > 12 ||
-                dadosResponsavel.senha  == '' || dadosResponsavel.senha  == undefined || dadosResponsavel.senha  == null || isNaN(dadosResponsavel.senha ) ||
-                dadosResponsavel.id_aluno  == '' || dadosResponsavel.id_aluno  == undefined || dadosResponsavel.id_aluno  == null || isNaN(dadosResponsavel.id_aluno )
+                dadosResponsavel.email == '' || dadosResponsavel.email == undefined || dadosResponsavel.email == null || dadosResponsavel.email.length > 12 ||
+                dadosResponsavel.senha == '' || dadosResponsavel.senha == undefined || dadosResponsavel.senha == null || isNaN(dadosResponsavel.senha) ||
+                dadosResponsavel.id_aluno == '' || dadosResponsavel.id_aluno == undefined || dadosResponsavel.id_aluno == null || isNaN(dadosResponsavel.id_aluno)
             ) {
                 return message.ERROR_REQUIRED_FIELDS
             } else {
@@ -100,25 +102,25 @@ const setExcluirResponsavel = async function (id) {
         if (idResponsavel == '' || idResponsavel == undefined || isNaN(idResponsavel) || idResponsavel == null) {
             return message.ERROR_INVALID_ID //400
         } else {
-            
+
             let responsavelId = await responsavelDAO.selectById(idResponsavel)
 
-            if(responsavelId.length > 0) {
+            if (responsavelId.length > 0) {
 
                 let responsavelDeleted = await responsavelDAO.deleteResponsavel(idResponsavel)
-                
-                if(responsavelDeleted){
+
+                if (responsavelDeleted) {
                     return message.SUCCESSED_DELETED_ITEM //200
-                }else{
+                } else {
                     return message.ERROR_INTERNAL_SERVER_DB //500
                 }
-            }else{
+            } else {
                 return message.ERROR_NOT_FOUND //404
             }
         }
-       } catch (error) {
+    } catch (error) {
         return message.ERROR_INTERNAL_SERVER //500
-       }
+    }
 
 }
 

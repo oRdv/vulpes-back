@@ -5,15 +5,12 @@ const { json } = require('body-parser')
 const setInserirNovaModalidade = async function (dadosModalidade, contentType) {
     try {
 
-        let statusValidated = false
-        let modalidadeJSON = {}
-
-
         if (String(contentType).toLowerCase() == 'application/json') {
 
-            console.log(dadosModalidade)
+            let statusValidated = false
+            let modalidadeJson = {}
 
-            if (dadosModalidade.nome == '' || dadosModalidade.nome == undefined || dadosModalidade.nome == null || dadosModalidade.nome.length > 150
+            if (dadosModalidade.nome == '' || dadosModalidade.nome == null || dadosModalidade.nome == undefined || dadosModalidade.nome.length > 200 
             ) {
                 return message.ERROR_REQUIRED_FIELDS
 
@@ -21,27 +18,36 @@ const setInserirNovaModalidade = async function (dadosModalidade, contentType) {
                 statusValidated = true
             }
 
-            if (statusValidated === true) {
-                //ecaminha os dados para o dao
-                let novomodalidadeJSON = await modalidadeDAO.insertNovaModalidade(dadosModalidade)
-                let id = await modalidadeDAO.selectById()
+            if (statusValidated) {
 
-                modalidadeJSON.status = message.SUCESSED_CREATED_ITEM.status
-                modalidadeJSON.status_code = message.SUCESSED_CREATED_ITEM.status_code
-                modalidadeJSON.message = message.SUCESSED_CREATED_ITEM.message
-                modalidadeJSON.modalidade = dadosModalidade
-                modalidadeJSON.id = dadosModalidade.id
+                let novomodalidadeJson = await modalidadeDAO.insertNovaModalidade(dadosModalidade)
 
-                return modalidadeJSON
+                if (novomodalidadeJson) {
+                    modalidadeJson.status = message.SUCESSED_CREATED_ITEM.status
+                    modalidadeJson.status_code = message.SUCESSED_CREATED_ITEM.status_code
+                    modalidadeJson.message = message.SUCESSED_CREATED_ITEM.message
+                    modalidadeJson.modalidade = novomodalidadeJson
+                    modalidadeJson.id = novomodalidadeJson[0].id
+
+                    return modalidadeJson
+                } else {
+
+                    return message.ERROR_INTERNAL_SERVER_DB
+
+                }
+
             }
+
         } else {
 
             return message.ERROR_CONTENT_TYPE
 
         }
+
     } catch (error) {
         return message.ERROR_INTERNAL_SERVER
     }
+
 
 
 }

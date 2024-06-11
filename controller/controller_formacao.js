@@ -203,10 +203,10 @@ const getNameUniversidade = async function (universidade) {
 }
 
 module.exports = {
-    setInserirNovaModalidade,
-    setAtualizarModalidade,
-    setExcluirModalidade,
-    getListarModalidade,
-    getBuscarModalidade,
-    getnameUniversidade
+    setAtualizarFormacao,
+    setInserirNovaFormacao,
+    setExcluirFormacao,
+    getBuscarFormacao,
+    getListarFormacao,
+    getNameUniversidade
 }
