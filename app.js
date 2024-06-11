@@ -466,6 +466,16 @@ app.delete('/v1/Vulpes/Aviso/:id', cors(), async function(request, response){
 /////////////////////////////////// NOTA ///////////////////////////////////
 
 
+app.get('/v1/Vulpes/Nota/Aluno/Disciplina/:idAluno/:idDisciplina', cors(), async function (request, response, next) {
+    let idAluno = request.params.idAluno;
+    let idDisciplina = request.params.idDisciplina;
+    let dadosNota = await controllerNota.getNotasPorAlunoseDisciplinas(idAluno, idDisciplina);
+
+    response.status(dadosNota.status_code);
+    response.json(dadosNota);
+});
+
+
 app.get('/v1/Vulpes/Nota', cors(), async function(request, response, next){
     let dadosNota = await controllerNota.getListarNota()
     
