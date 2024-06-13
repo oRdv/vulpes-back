@@ -12,15 +12,13 @@ const setInserirNovoResponsavel = async function (dadosResponsavel, contentType)
 
             if (dadosResponsavel.nome == '' || dadosResponsavel.nome == undefined || dadosResponsavel.nome == null || dadosResponsavel.nome.length > 100 || 
                 dadosResponsavel.email  == '' || dadosResponsavel.email  == undefined || dadosResponsavel.email  == null || dadosResponsavel.email.length > 100 || 
-                dadosResponsavel.senha  == '' || dadosResponsavel.senha  == undefined || dadosResponsavel.senha  == null || dadosResponsavel.senha.length > 100 
+                dadosResponsavel.senha  == '' || dadosResponsavel.senha  == undefined || dadosResponsavel.senha  == null || dadosResponsavel.senha.length > 100 ||
+                dadosResponsavel.id_aluno  == '' || dadosResponsavel.id_aluno  == undefined || dadosResponsavel.id_aluno  == null || isNaN(dadosResponsavel.id_aluno) 
             ) {
                 return message.ERROR_REQUIRED_FIELDS
-
             }
 
                 let novoresponsavelJson = await responsavelDAO.insertNovoResponsavel(dadosResponsavel)
-
-                    console.log(novoresponsavelJson);
 
                 if (novoresponsavelJson && novoresponsavelJson.length > 0) {
 

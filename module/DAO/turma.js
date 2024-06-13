@@ -56,18 +56,14 @@ const selectByNameTurma = async function (nome) {
 const insertNovaTurma = async function(dadosTurma) {
     try {
         
-        let sql
-
-        sql = `INSERT INTO tbl_turma (nome,
-                                        modalidade,
+        let sql = `INSERT INTO tbl_turma (nome,
                                         data_inicio,
-                                        data_fim
+                                        data_conclusao
                                         )
                                      VALUES (
-                                         '${dadosTurma.nome}'
-                                         '${dadosTurma.modalidade}'
-                                         '${dadosTurma.data_inicio}'
-                                         '${dadosTurma.data_fim}'
+                                         '${dadosTurma.nome}',
+                                         '${dadosTurma.data_inicio}',
+                                         '${dadosTurma.data_conclusao}'
                                      )`
 
         let result = await prisma.$queryRawUnsafe(sql)

@@ -4,51 +4,39 @@ const { json } = require('body-parser')
 
 const setInserirNovaTurma = async function (dadosTurma, contentType) {
     try {
+        let turmaJson = {}
 
-        if (String(contentType).toLowerCase() == 'application/json') {
+        if (String(contentType).toLowerCase() !== 'application/json') {
+            return message.ERROR_CONTENT_TYPE
+        }
 
-            let statusValidated = false
-            let turmaJson = {}
-
-
-            if (dadosTurma.nome == '' || dadosTurma.nome == undefined || dadosTurma.nome == null || dadosTurma.nome.length > 255 ||
-                dadosTurma.modalidade == '' || dadosTurma.modalidade == undefined || dadosTurma.modalidade == null || dadosTurma.modalidade.length > 50 ||
-                dadosTurma.data_inicio == '' || dadosTurma.data_inicio == undefined || dadosTurma.data_inicio == null ||
-                dadosTurma.data_fim == '' || dadosTurma.data_fim == undefined || dadosTurma.data_fim == null
+            if (dadosTurma.nome == '' || dadosTurma.nome == undefined || dadosTurma.nome == null || dadosTurma.nome.length > 100 || 
+                dadosTurma.data_inicio  == '' || dadosTurma.data_inicio  == undefined || dadosTurma.data_inicio  == null || dadosTurma.data_inicio.length > 100 || 
+                dadosTurma.data_conclusao  == '' || dadosTurma.data_conclusao  == undefined || dadosTurma.data_conclusao  == null || dadosTurma.data_conclusao.length > 100 
             ) {
                 return message.ERROR_REQUIRED_FIELDS
-
-            } else {
-                statusValidated = true
             }
+                let novoturmaJson = await turmaDAO.insertNovaTurma(dadosTurma)
 
-            if (statusValidated) {
+                if (novoturmaJson && novoturmaJson.length > 0) {
 
-                let novaTurmaJson = await turmaDAO.insertNovaTurma(dadosTurma)
-
-                if (novaTurmaJson) {
                     turmaJson.status = message.SUCESSED_CREATED_ITEM.status
                     turmaJson.status_code = message.SUCESSED_CREATED_ITEM.status_code
                     turmaJson.message = message.SUCESSED_CREATED_ITEM.message
-                    turmaJson.turma = novaTurmaJson
-                    turmaJson.id = novaTurmaJson[0].id
+                    turmaJson.turma = novoturmaJson
+                    turmaJson.id = novoturmaJson[0].id
 
                     return turmaJson
+
                 } else {
 
                     return message.ERROR_INTERNAL_SERVER_DB
 
-                }
-            }
-        } else {
-            return message.ERROR_CONTENT_TYPE
-        }
+                }     
 
     } catch (error) {
         return message.ERROR_INTERNAL_SERVER
     }
-
-
 }
 
 const setAtualizarTurma = async function (id, dadosTurma, contentType) {
