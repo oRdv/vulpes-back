@@ -36,12 +36,12 @@ const controllerFormacao = require('./controller/controller_formacao.js')
 
 
 app.get('/v1/Vulpes/Alunos', cors(), async function (request, response, next) {
-    let dadosAvisoss = await controllerAlunos.getListarAluno()
+    let dadosAluno = await controllerAlunos.getListarAluno()
 
 
-    if (dadosAvisoss) {
+    if (dadosAluno) {
 
-        response.json(dadosAvisoss)
+        response.json(dadosAluno)
         response.status(200)
 
     } else {
@@ -53,11 +53,11 @@ app.get('/v1/Vulpes/Alunos', cors(), async function (request, response, next) {
 
 app.get('/v1/Vulpes/Alunos/:id', cors(), async function (request, response, next) {
     //Recebe o id encaminhado pela requisição 
-    let idAviso = request.params.id
-    let dadosAvisos = await controllerAlunos.getBuscarAluno(idAviso)
+    let idALuno = request.params.id
+    let dadosAluno = await controllerAlunos.getBuscarAluno(idALuno)
 
-    response.status(dadosAvisos.status_code)
-    response.json(dadosAvisos)
+    response.status(dadosAluno.status_code)
+    response.json(dadosAluno)
 
 })
 
@@ -65,10 +65,10 @@ app.get('/v1/Vulpes/Alunos/:id', cors(), async function (request, response, next
 app.get('/v1/Vulpes/Alunos/nome', cors(), async function (request, response, next) {
     //Recebe o id encaminhado pela requisição 
     let nome = request.query.nome
-    let dadosAvisos = await controllerAlunos.getNameAluno(nome)
+    let dadosAluno = await controllerAlunos.getNameAluno(nome)
 
-    response.status(dadosAvisos.status_code)
-    response.json(dadosAvisos)
+    response.status(dadosAluno.status_code)
+    response.json(dadosAluno)
 
 })
 
@@ -85,21 +85,21 @@ app.get('/v1/Vulpes/Alunos/Responsavel/:id', async (req, res) => {
 
 
 app.delete('/v1/Vulpes/Alunos/:id', cors(), async function (request, response) {
-    let idAviso = request.params.id
-    let dadosAvisos = await controllerAlunos.setExcluirAluno(idAviso)
+    let idALuno = request.params.id
+    let dadosAluno = await controllerAlunos.setExcluirAluno(idALuno)
 
     response.status(200)
-    response.json(dadosAvisos)
+    response.json(dadosAluno)
 })
 
 app.put('/v1/Vulpes/Atualizar/Alunos/:id', cors(), bodyParserJson, async function (request, response) {
     let contentType = request.headers['content-type']
-    let idAviso = request.params.id
+    let idALuno = request.params.id
     let dadosPut = request.body
-    let dadosAvisos = await controllerAlunos.setAtualizarAluno(idAviso, dadosPut, contentType)
+    let dadosAluno = await controllerAlunos.setAtualizarAluno(idALuno, dadosPut, contentType)
 
-    response.status(dadosAvisos.status_code)
-    response.json(dadosAvisos)
+    response.status(dadosAluno.status_code)
+    response.json(dadosAluno)
 })
 
 app.post('/v1/Vulpes/Inserir/Alunos', cors(), bodyParserJson, async function (request, response, next) {
@@ -486,18 +486,16 @@ app.post('/v1/Vulpes/Inserir/Aviso', cors(), bodyParserJson, async function (req
 
     response.status(resultAviso.status_code).json(resultAviso);
 });
-
+   
 app.put('/v1/Vulpes/Atualizar/Aviso/:id', cors(), bodyParserJson, async function (request, response) {
     let contentType = request.headers['content-type']
     let idAviso = request.params.id
     let dadosPut = request.body
-    let dadosAviso = await controllerAviso.setAtualizarAviso(idAviso, dadosPut, contentType)
+    let dadosAvisos = await controllerAviso.setAtualizarAviso(idAviso, dadosPut, contentType)
 
-    // console.log(dadosAviso);
-    response.status(dadosAviso.status_code)
-    response.json(dadosAviso)
+    response.status(dadosAvisos.status_code)
+    response.json(dadosAvisos)
 })
-
 /////////////////////////////////// NOTA ///////////////////////////////////
 
 

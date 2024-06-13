@@ -70,6 +70,7 @@ const insertNovoAluno = async function (dadosAluno) {
 
             const insertedAluno = await prisma.$queryRaw`SELECT * FROM tbl_aluno WHERE id = (SELECT MAX(id) FROM tbl_aluno)`
             return insertedAluno
+            
         } else {
             return false
         }

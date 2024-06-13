@@ -4,11 +4,11 @@ const { json } = require('body-parser')
 
 const setInserirNovoResponsavel = async function (dadosResponsavel, contentType) {
     try {
+        let responsavelJson = {}
 
-        if (String(contentType).toLowerCase() == 'application/json') {
-
-            let statusValidated = false
-            let responsavelJson = {}
+        if (String(contentType).toLowerCase() !== 'application/json') {
+            return message.ERROR_CONTENT_TYPE
+        }
 
             if (dadosResponsavel.nome == '' || dadosResponsavel.nome == undefined || dadosResponsavel.nome == null || dadosResponsavel.nome.length > 100 || 
                 dadosResponsavel.email  == '' || dadosResponsavel.email  == undefined || dadosResponsavel.email  == null || dadosResponsavel.email.length > 100 || 
@@ -16,15 +16,14 @@ const setInserirNovoResponsavel = async function (dadosResponsavel, contentType)
             ) {
                 return message.ERROR_REQUIRED_FIELDS
 
-            } else {
-                statusValidated = true
             }
-
-            if (statusValidated) {
 
                 let novoresponsavelJson = await responsavelDAO.insertNovoResponsavel(dadosResponsavel)
 
-                if (novoresponsavelJson) {
+                    console.log(novoresponsavelJson);
+
+                if (novoresponsavelJson && novoresponsavelJson.length > 0) {
+
                     responsavelJson.status = message.SUCESSED_CREATED_ITEM.status
                     responsavelJson.status_code = message.SUCESSED_CREATED_ITEM.status_code
                     responsavelJson.message = message.SUCESSED_CREATED_ITEM.message
@@ -36,15 +35,7 @@ const setInserirNovoResponsavel = async function (dadosResponsavel, contentType)
 
                     return message.ERROR_INTERNAL_SERVER_DB
 
-                }
-
-            }
-
-        } else {
-
-            return message.ERROR_CONTENT_TYPE
-
-        }
+                }     
 
     } catch (error) {
         return message.ERROR_INTERNAL_SERVER

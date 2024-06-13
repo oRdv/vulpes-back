@@ -84,15 +84,15 @@ const insertNovoAviso = async function (dadosAviso) {
 }
 
 
-const updateAviso = async function () {
+const updateAviso = async function (dadosAviso) {
     try {
 
         let sql
 
         sql = `UPDATE tbl_aviso SET 
-                                titulo = '${dadosAviso.titulo}',
-                                conteudo = '${dadosAviso.conteudo}',
-                                data_publicacao = '${dadosAviso.data_publicacao}'
+        titulo = '${dadosAviso.titulo}',
+        conteudo = '${dadosAviso.conteudo}',
+        data_publicacao = '${dadosAviso.data_publicacao}'
                                 WHERE tbl_aviso.id = '${dadosAviso.id}'`
 
 

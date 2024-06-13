@@ -54,40 +54,41 @@ const setInserirNovoAviso = async function (dadosAviso, contentType) {
 }
 
 const setAtualizarAviso = async function (id, dadosAviso, contentType) {
+    let avisoJson = {};
     try {
-        let avisoJson = {}
         if (String(contentType).toLowerCase() !== 'application/json') {
-            return message.ERROR_CONTENT_TYPE
+            return message.ERROR_CONTENT_TYPE;
         }
-
+    
+        // Validação de campos
         if (!id || isNaN(id) ||
-        dadosAviso.titulo == '' || dadosAviso.titulo == null || dadosAviso.titulo == undefined || dadosAviso.titulo.length > 200 ||
-        dadosAviso.conteudo == '' || dadosAviso.conteudo == null || dadosAviso.conteudo == undefined ||
-        dadosAviso.data_publicacao == '' || dadosAviso.data_publicacao == null || dadosAviso.data_publicacao == undefined
+            !dadosAviso.titulo || dadosAviso.titulo.length === 0 || dadosAviso.titulo.length > 200 ||
+            !dadosAviso.conteudo || dadosAviso.conteudo.length === 0 ||
+            !dadosAviso.data_publicacao
         ) {
-            return message.ERROR_REQUIRED_FIELDS
+            return message.ERROR_REQUIRED_FIELDS;
         }
-
-        dadosAviso.id = id
-        let novoAviso = await avisoDAO.updateAviso(dadosAviso)
-
+    
+        dadosAviso.id = id;
+        let novoAviso = await avisoDAO.updateAviso(dadosAviso);
+    
         if (novoAviso) {
-
-            avisoJson.status = message.SUCCESSED_UPDATED_ITEM
-            avisoJson.status_code = message.SUCCESSED_UPDATED_ITEM.status_code
-            avisoJson.message = message.SUCCESSED_UPDATED_ITEM.message
-            avisoJson.aviso = dadosAviso
-            avisoJson.id = dadosAviso.id
-
-            return avisoJson
-            
+            avisoJson.status = message.SUCCESSED_UPDATED_ITEM;
+            avisoJson.status_code = message.SUCCESSED_UPDATED_ITEM.status_code;
+            avisoJson.message = message.SUCCESSED_UPDATED_ITEM.message;
+            avisoJson.aviso = dadosAviso;
+            avisoJson.id = dadosAviso.id;
+    
+            return avisoJson;
         } else {
-            return message.ERROR_INTERNAL_SERVER_DB; 
+            return message.ERROR_INTERNAL_SERVER_DB;
         }
+    
     } catch (error) {
-        return message.ERROR_INTERNAL_SERVER; 
+        console.error("Erro ao atualizar aviso:", error);
+        return message.ERROR_INTERNAL_SERVER;
     }
-}
+}    
 
 const setExcluirAviso = async function (id) {
 
